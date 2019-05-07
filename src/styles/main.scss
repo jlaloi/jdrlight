@@ -1,0 +1,50 @@
+@import './config';
+
+body {
+  background: $bg;
+  color: $color;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input,
+button,
+select {
+  margin: 0.5em;
+  color: #ccc;
+  border: $border;
+  border-radius: 2px;
+  cursor: pointer;
+  background-color: #333;
+}
+
+input:hover,
+button:hover,
+select:hover {
+  color: #fff;
+}
+
+input:disabled,
+button:disabled,
+select:disabled {
+  border-color: $bgDisabled;
+  background-color: $bgDisabled;
+  color: $colorDisabled;
+  cursor: not-allowed;
+}
+
+.router-link,
+.router-link-active {
+  font-size: 2em;
+  margin-right: 0.5em;
+  color: $color2;
+  text-decoration: none;
+}
+
+.router-link-exact-active {
+  font-weight: bold;
+  border-bottom: $border;
+}
+
+.unsaved {
+  color: $colorError;
+}

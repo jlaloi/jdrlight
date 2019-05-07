@@ -1,0 +1,15 @@
+type Scene @model {
+  id: ID! @isUnique
+  name: String
+  music: String
+  lights: [Light!]! @relation(name: "SceneLights")
+}
+
+type Light @model {
+  id: ID! @isUnique
+  deviceId: String
+  power: String
+  bright: Int
+  rgb: [Int!]
+  scene: Scene @relation(name: "SceneLights")
+}
