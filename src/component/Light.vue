@@ -132,11 +132,11 @@ export default {
   text-align: center;
   margin: 0.25em;
   padding: 0.25em;
-  width: 12em;
+  width: 11em;
   input,
   button,
   select {
-    width: 11em;
+    width: 10em;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -144,7 +144,7 @@ export default {
   }
   select,
   #test {
-    width: 5.35em;
+    width: 4.35em;
     display: inline-block;
   }
 }

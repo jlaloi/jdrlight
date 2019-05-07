@@ -10,11 +10,14 @@
         <div v-else>
           <input v-model="scene.name" type="text" placeholder="Scene name" class="sceneName">
           <!-- AUDIO -->
-          <select v-model="scene.music">
-            <option/>
-            <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
-          </select>
-          <audio-player v-if="scene.music" config="true" :music="scene.music"></audio-player>
+          <div class="audio">
+            <select v-model="scene.music">
+              <option/>
+              <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
+            </select>
+            <input v-model="scene.music" type="text" placeholder="YT id">
+            <audio-player v-if="scene.music" :key="scene.music" config="true" :music="scene.music"></audio-player>
+          </div>
           <!-- LIGHTS -->
           <lights :scene="scene"></lights>
           <!-- ACTIONS -->
@@ -77,17 +80,34 @@ export default {
   border-radius: 2px;
   display: inline-block;
   margin: 0.25em;
+  padding: 0.25em;
   vertical-align: top;
+  text-align: center;
   input,
   button,
   select {
     display: block;
-    width: 25em;
+    width: 23em;
     font-size: 1em;
   }
   .sceneName {
     font-weight: bold;
     text-align: center;
+  }
+  .audio {
+    margin: 0;
+    padding: 0;
+    input,
+    select {
+      display: inline-block;
+      margin: 0.25em;
+    }
+    input {
+      width: 13em;
+    }
+    select {
+      width: 9.5em;
+    }
   }
 }
 </style>

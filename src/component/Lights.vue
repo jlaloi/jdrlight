@@ -54,9 +54,7 @@ export default {
       }
     ) {
       const data = proxy.readQuery({ query: ALL_SCENES });
-      data.allScenes
-        .find(s => s.id === this.scene.id)
-        .lights.push(createLight);
+      data.allScenes.find(s => s.id === this.scene.id).lights.push(createLight);
       proxy.writeQuery({ query: ALL_SCENES, data });
     }
   }
@@ -64,9 +62,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 #lights {
+  margin: 0;
+  padding: 0;
   select,
   button {
-    width: 12em;
+    width: 11em;
     display: inline-block;
   }
 }

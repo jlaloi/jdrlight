@@ -8,6 +8,7 @@ export const getLights = () =>
       deviceId: l.id
     };
   });
+//[{deviceId: 'Dummy'}, {deviceId: 'Dummy2'}];
 
 export const getLight = deviceId =>
   look.getLights().find(l => l.id === deviceId);

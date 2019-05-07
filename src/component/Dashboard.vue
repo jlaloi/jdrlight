@@ -2,7 +2,7 @@
   <div id="dashboard">
     <div v-if="$apollo.loading">Loading..</div>
     <a v-for="s in allScenes" v-else :key="s.id" @click="playScene(s)">{{ s.name }}</a>
-    <audio-player v-if="music" :music="music"></audio-player>
+    <audio-player v-if="music" :key="music" :music="music"></audio-player>
   </div>
 </template>
 
