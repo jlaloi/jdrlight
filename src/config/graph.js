@@ -2,6 +2,9 @@ import gql from 'graphql-tag';
 
 // https://console.graph.cool/
 
+/*
+ * SCENARIO
+ */
 export const ALL_SCENARIOS = gql`
   query {
     allScenarios {
@@ -11,9 +14,33 @@ export const ALL_SCENARIOS = gql`
   }
 `;
 
+export const GET_SCENARIO = gql`
+  query($id: ID!) {
+    Scenario(id: $id) {
+      id
+      name
+      scenes {
+        id
+        scenario {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const CREATE_SCENARIO = gql`
   mutation($name: String!) {
     createScenario(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+export const UPDATE_SCENARIO = gql`
+  mutation($id: ID!, $name: String!) {
+    updateScenario(id: $id, name: $name) {
       id
       name
     }
@@ -28,74 +55,17 @@ export const DELETE_SCENARIO = gql`
   }
 `;
 
-export const GET_SCENARIO = gql`
-  query($id: ID!) {
-    Scenario(id: $id) {
-      id
-      name
-      scenes {
-        id
-      }
-    }
-  }
-`;
-
-export const UPDATE_SCENARIO = gql`
-  mutation($id: ID!, $name: String!) {
-    updateScenario(id: $id, name: $name) {
-      id
-      name
-    }
-  }
-`;
-
+/*
+ * SCENE
+ */
 export const GET_SCENES = gql`
   query($scenario: ID!) {
     allScenes(filter: { scenario: { id: $scenario } }) {
       id
       name
       music
-    }
-  }
-`;
-
-export const ALL_SCENES = gql`
-  query {
-    allScenes {
-      id
-      name
-      music
-      lights {
-        id
-        deviceId
-        power
-        bright
-        rgb
-        scene {
-          id
-        }
-      }
       scenario {
         id
-      }
-    }
-  }
-`;
-
-export const ALL_DASHBOARD = gql`
-  query {
-    allScenarios {
-      id
-      name
-      scenes {
-        name
-        music
-        lights {
-          deviceId
-          power
-          bright
-          rgb
-        }
       }
     }
   }
@@ -114,6 +84,30 @@ export const CREATE_SCENE = gql`
   }
 `;
 
+export const UPDATE_SCENE = gql`
+  mutation($id: ID!, $name: String!, $music: String) {
+    updateScene(id: $id, name: $name, music: $music) {
+      id
+      name
+      music
+      scenario {
+        id
+      }
+    }
+  }
+`;
+
+export const DELETE_SCENE = gql`
+  mutation($id: ID!) {
+    deleteScene(id: $id) {
+      id
+    }
+  }
+`;
+
+/*
+ * LIGHT
+ */
 export const GET_LIGHTS = gql`
   query($sceneId: ID!) {
     allLights(filter: { scene: { id: $sceneId } }) {
@@ -156,22 +150,6 @@ export const CREATE_LIGHT = gql`
   }
 `;
 
-export const DELETE_SCENE = gql`
-  mutation($id: ID!) {
-    deleteScene(id: $id) {
-      id
-    }
-  }
-`;
-
-export const DELETE_LIGHT = gql`
-  mutation($id: ID!) {
-    deleteLight(id: $id) {
-      id
-    }
-  }
-`;
-
 export const UPDATE_LIGHT = gql`
   mutation($id: ID!, $power: String, $bright: Int, $rgb: [Int!]!) {
     updateLight(id: $id, power: $power, bright: $bright, rgb: $rgb) {
@@ -187,14 +165,31 @@ export const UPDATE_LIGHT = gql`
   }
 `;
 
-export const UPDATE_SCENE = gql`
-  mutation($id: ID!, $name: String!, $music: String) {
-    updateScene(id: $id, name: $name, music: $music) {
+export const DELETE_LIGHT = gql`
+  mutation($id: ID!) {
+    deleteLight(id: $id) {
+      id
+    }
+  }
+`;
+
+/*
+ * DASHBOARD (=ALL)
+ */
+export const ALL_DASHBOARD = gql`
+  query {
+    allScenarios {
       id
       name
-      music
-      scenario {
-        id
+      scenes {
+        name
+        music
+        lights {
+          deviceId
+          power
+          bright
+          rgb
+        }
       }
     }
   }
