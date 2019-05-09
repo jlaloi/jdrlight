@@ -2,6 +2,63 @@ import gql from 'graphql-tag';
 
 // https://console.graph.cool/
 
+export const ALL_SCENARIOS = gql`
+  query {
+    allScenarios {
+      id
+      name
+    }
+  }
+`;
+
+export const CREATE_SCENARIO = gql`
+  mutation($name: String!) {
+    createScenario(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+export const DELETE_SCENARIO = gql`
+  mutation($id: ID!) {
+    deleteScenario(id: $id) {
+      id
+    }
+  }
+`;
+
+export const GET_SCENARIO = gql`
+  query($id: ID!) {
+    Scenario(id: $id) {
+      id
+      name
+      scenes {
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_SCENARIO = gql`
+  mutation($id: ID!, $name: String!) {
+    updateScenario(id: $id, name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+export const GET_SCENES = gql`
+  query($scenario: ID!) {
+    allScenes(filter: { scenario: { id: $scenario } }) {
+      id
+      name
+      music
+    }
+  }
+`;
+
 export const ALL_SCENES = gql`
   query {
     allScenes {
@@ -18,25 +75,55 @@ export const ALL_SCENES = gql`
           id
         }
       }
+      scenario {
+        id
+      }
+    }
+  }
+`;
+
+export const ALL_DASHBOARD = gql`
+  query {
+    allScenarios {
+      id
+      name
+      scenes {
+        name
+        music
+        lights {
+          deviceId
+          power
+          bright
+          rgb
+        }
+      }
     }
   }
 `;
 
 export const CREATE_SCENE = gql`
-  mutation($name: String!) {
-    createScene(name: $name) {
+  mutation($name: String!, $scenarioId: ID!) {
+    createScene(name: $name, scenarioId: $scenarioId) {
       id
       name
       music
-      lights {
+      scenario {
         id
-        deviceId
-        power
-        bright
-        rgb
-        scene {
-          id
-        }
+      }
+    }
+  }
+`;
+
+export const GET_LIGHTS = gql`
+  query($sceneId: ID!) {
+    allLights(filter: { scene: { id: $sceneId } }) {
+      id
+      deviceId
+      power
+      bright
+      rgb
+      scene {
+        id
       }
     }
   }
@@ -106,15 +193,8 @@ export const UPDATE_SCENE = gql`
       id
       name
       music
-      lights {
+      scenario {
         id
-        deviceId
-        power
-        bright
-        rgb
-        scene {
-          id
-        }
       }
     }
   }

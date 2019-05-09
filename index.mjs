@@ -1,5 +1,6 @@
 import Express from 'express';
 import bodyParser from 'body-parser';
+import compression from 'compression';
 
 import fs from 'fs';
 import { getLights, setBright, setPower, setRGB } from './light';
@@ -9,6 +10,7 @@ const DIR_PUBLIC = 'public/';
 const DIR_MUSIC = 'music/';
 
 const app = Express();
+app.use(compression({ filter: () => true }));
 app.use(bodyParser.json());
 
 app.get('/light', (req, res) => res.json(getLights()));

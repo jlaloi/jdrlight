@@ -1,18 +1,19 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Scenes from '../component/Scenes';
+import Scenarios from '../component/Scenarios';
+import Scenario from '../component/Scenario';
 import Dashboard from '../component/Dashboard';
 
 Vue.use(VueRouter);
 
-const routes = [
+export const routes = [
+  { title: 'Dashboard', path: '/', component: Dashboard },
+  { title: 'Scenario', path: '/scenario', component: Scenarios },
   {
-    path: '/',
-    component: Dashboard
-  },
-  {
-    path: '/scenes',
-    component: Scenes
+    title: 'Scenario',
+    path: '/scenario/:id',
+    name: 'scenario',
+    component: Scenario
   }
 ];
 

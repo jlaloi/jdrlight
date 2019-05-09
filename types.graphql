@@ -1,8 +1,15 @@
+type Scenario @model {
+  id: ID! @isUnique
+  name: String
+  scenes: [Scene!]! @relation(name: "ScenarioScenes")
+}
+
 type Scene @model {
   id: ID! @isUnique
   name: String
   music: String
   lights: [Light!]! @relation(name: "SceneLights")
+  scenario: Scenario @relation(name: "ScenarioScenes")
 }
 
 type Light @model {
