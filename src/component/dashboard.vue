@@ -10,7 +10,7 @@
     <div v-if="scenario">
       <a v-for="s in scenario.scenes" :key="s.id" @click="playScene(s)">{{ s.name }}</a>
     </div>
-     <!--Player(s) -->
+    <!--Player(s) -->
     <audio-player v-if="music" :key="music" :music="music"></audio-player>
   </div>
 </template>
@@ -41,7 +41,8 @@ export default {
   },
   apollo: {
     allScenarios: {
-      query: ALL_DASHBOARD
+      query: ALL_DASHBOARD,
+      fetchPolicy: 'network-only'
     }
   }
 };
