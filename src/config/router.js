@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Scenarios from '../component/Scenarios';
-import Scenario from '../component/Scenario';
-import Dashboard from '../component/Dashboard';
+import Scenarios from '../component/scenarios';
+import Scenario from '../component/scenario';
+import Dashboard from '../component/dashboard';
 
 Vue.use(VueRouter);
 
