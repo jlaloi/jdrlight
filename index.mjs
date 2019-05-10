@@ -3,14 +3,14 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 
 import fs from 'fs';
-import { getLights, setBright, setPower, setRGB } from './light';
+import {getLights, setBright, setPower, setRGB} from './light';
 
 const PORT = 9090;
 const DIR_PUBLIC = 'public/';
 const DIR_MUSIC = 'music/';
 
 const app = Express();
-app.use(compression({ filter: () => true }));
+app.use(compression({filter: () => true}));
 app.use(bodyParser.json());
 
 app.get('/light', (req, res) => res.json(getLights()));
@@ -27,9 +27,7 @@ app.post('/light/:deviceId', async (req, res) => {
 
 app.use(Express.static(DIR_PUBLIC));
 app.get('/musics', (req, res) =>
-  fs.readdir(DIR_PUBLIC + DIR_MUSIC, (err, files) =>
-    res.json(files.map(f => DIR_MUSIC + f))
-  )
+  fs.readdir(DIR_PUBLIC + DIR_MUSIC, (err, files) => res.json(files.map(f => DIR_MUSIC + f)))
 );
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

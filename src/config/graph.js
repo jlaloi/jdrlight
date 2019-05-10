@@ -60,7 +60,7 @@ export const DELETE_SCENARIO = gql`
  */
 export const GET_SCENES = gql`
   query($scenario: ID!) {
-    allScenes(filter: { scenario: { id: $scenario } }) {
+    allScenes(filter: {scenario: {id: $scenario}}) {
       id
       name
       music
@@ -110,7 +110,7 @@ export const DELETE_SCENE = gql`
  */
 export const GET_LIGHTS = gql`
   query($sceneId: ID!) {
-    allLights(filter: { scene: { id: $sceneId } }) {
+    allLights(filter: {scene: {id: $sceneId}}) {
       id
       deviceId
       power
@@ -124,20 +124,8 @@ export const GET_LIGHTS = gql`
 `;
 
 export const CREATE_LIGHT = gql`
-  mutation(
-    $deviceId: String
-    $power: String
-    $bright: Int
-    $rgb: [Int!]!
-    $sceneId: ID!
-  ) {
-    createLight(
-      deviceId: $deviceId
-      power: $power
-      bright: $bright
-      rgb: $rgb
-      sceneId: $sceneId
-    ) {
+  mutation($deviceId: String, $power: String, $bright: Int, $rgb: [Int!]!, $sceneId: ID!) {
+    createLight(deviceId: $deviceId, power: $power, bright: $bright, rgb: $rgb, sceneId: $sceneId) {
       id
       deviceId
       power

@@ -1,7 +1,7 @@
 <template>
   <div id="sceneDelete">
     <ApolloMutation :mutation="deleteScene" :variables="{id: scene.id}" :update="update">
-      <template slot-scope="{ mutate, loading, error }">
+      <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
         <button else :disabled="loading" @click="mutate()">Delete Scene</button>
         <p v-if="error">An error occured: {{ error }}</p>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { DELETE_SCENE, GET_SCENES } from '../config/graph.js';
+import {DELETE_SCENE, GET_SCENES} from '../config/graph.js';
 
 export default {
   name: 'SceneDelete',
@@ -25,7 +25,7 @@ export default {
     update(
       store,
       {
-        data: { deleteScene }
+        data: {deleteScene}
       }
     ) {
       const query = {
@@ -34,14 +34,13 @@ export default {
           scenario: this.scene.scenario.id
         }
       };
-      const { allScenes } = store.readQuery(query);
+      const {allScenes} = store.readQuery(query);
       store.writeQuery({
         ...query,
         data: {
           allScenes: allScenes.filter(s => s.id !== deleteScene.id)
         }
       });
-      
     }
   }
 };

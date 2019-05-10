@@ -10,8 +10,7 @@ export const getLights = () =>
   });
 //[{deviceId: 'Dummy'}, {deviceId: 'Dummy2'}];
 
-export const getLight = deviceId =>
-  look.getLights().find(l => l.id === deviceId);
+export const getLight = deviceId => look.getLights().find(l => l.id === deviceId);
 
 export const updateLight = (fct, deviceId) =>
   new Promise(async (resolve, reject) => {

@@ -3,8 +3,8 @@
     <div v-if="$apollo.loading">Loading..</div>
     <!-- Scenario list -->
     <select v-else v-model="scenario">
-      <option/>
-      <option v-for="s in allScenarios" :key="s.id" :value="s">{{s.name}}</option>
+      <option />
+      <option v-for="s in allScenarios" :key="s.id" :value="s">{{ s.name }}</option>
     </select>
     <!-- Scene list -->
     <div v-if="scenario">

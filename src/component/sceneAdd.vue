@@ -1,7 +1,7 @@
 <template>
   <div id="sceneAdd">
     <div v-if="loading">Loading</div>
-    <input v-model="name" :disabled="loading" type="text" placeholder="Scene name">
+    <input v-model="name" :disabled="loading" type="text" placeholder="Scene name" />
     <button :disabled="loading || !name" @click="createScene()">Add</button>
     <p v-if="error">An error occured: {{ error }}</p>
   </div>

@@ -2,11 +2,11 @@
   <div id="scenario">
     <div v-if="$apollo.loading">Loading {{ id }}..</div>
     <ApolloMutation v-else :mutation="updateScenario" :variables="{id, name}" @done="onDone">
-      <template slot-scope="{ mutate, loading, error }">
-        <h1 @click="onDone">{{Scenario.name}}</h1>
+      <template slot-scope="{mutate, loading, error}">
+        <h1 @click="onDone">{{ Scenario.name }}</h1>
         <!--Name Edit -->
         <div v-if="toggleChangeName">
-          <input v-model="name" :disabled="loading" type="text" placeholder="New scenario name">
+          <input v-model="name" :disabled="loading" type="text" placeholder="New scenario name" />
           <div v-if="loading">Loading...</div>
           <button v-else :disabled="!name" @click="mutate()">Save</button>
           <p v-if="error">An error occured: {{ error }}</p>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { GET_SCENARIO, UPDATE_SCENARIO } from '../config/graph.js';
+import {GET_SCENARIO, UPDATE_SCENARIO} from '../config/graph.js';
 import scenes from './scenes';
 
 export default {
@@ -64,4 +64,3 @@ export default {
   }
 }
 </style>
-

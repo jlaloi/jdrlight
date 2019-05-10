@@ -1,21 +1,17 @@
 <template>
   <div id="scene">
-    <ApolloMutation
-      :mutation="updateScene"
-      :variables="{id: scene.id, name, music}"
-      :update="update"
-    >
-      <template slot-scope="{ mutate, loading, error }">
+    <ApolloMutation :mutation="updateScene" :variables="{id: scene.id, name, music}" :update="update">
+      <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
         <div v-else>
-          <input v-model="name" type="text" placeholder="Scene name" class="sceneName">
+          <input v-model="name" type="text" placeholder="Scene name" class="sceneName" />
           <!-- Audio -->
           <div class="audio">
             <select v-model="music">
-              <option/>
+              <option />
               <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
             </select>
-            <input v-model="music" type="text" placeholder="YT id">
+            <input v-model="music" type="text" placeholder="YT id" />
             <audio-player v-if="music" :key="music" config="true" :music="music"></audio-player>
           </div>
           <!-- Lights -->
@@ -34,7 +30,7 @@
 import audioPlayer from './audioPlayer';
 import sceneDelete from './sceneDelete';
 import lights from './lights';
-import { UPDATE_SCENE, GET_SCENES } from '../config/graph';
+import {UPDATE_SCENE, GET_SCENES} from '../config/graph';
 
 export default {
   name: 'Scene',
@@ -67,12 +63,12 @@ export default {
   },
   methods: {
     reset() {
-      ({ name: this.name, music: this.music } = this.scene);
+      ({name: this.name, music: this.music} = this.scene);
     },
     update(
       proxy,
       {
-        data: { updateScene }
+        data: {updateScene}
       }
     ) {
       const query = {
@@ -84,7 +80,7 @@ export default {
       const data = proxy.readQuery(query);
       const sceneIndex = data.allScenes.findIndex(s => s.id === this.scene.id);
       data.allScenes[sceneIndex] = updateScene;
-      proxy.writeQuery({ ...query, data });
+      proxy.writeQuery({...query, data});
     }
   }
 };

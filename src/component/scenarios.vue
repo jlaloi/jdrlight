@@ -1,15 +1,10 @@
 <template>
   <div id="scenarios">
     <!-- Create -->
-    <ApolloMutation
-      :mutation="createScenario"
-      :variables="{name}"
-      :update="updateCreate"
-      @done="onDone"
-    >
-      <template slot-scope="{ mutate, loading, error }">
+    <ApolloMutation :mutation="createScenario" :variables="{name}" :update="updateCreate" @done="onDone">
+      <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
-        <input v-model="name" :disabled="loading" type="text" placeholder="Scenario name">
+        <input v-model="name" :disabled="loading" type="text" placeholder="Scenario name" />
         <button :disabled="loading || !name" @click="mutate()">Create</button>
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
@@ -18,10 +13,10 @@
     <ul>
       <li v-for="s in allScenarios" :key="s.id">
         <!-- Detail -->
-        <router-link :to="{name: 'scenario', params: { id: s.id }}">{{s.name}}</router-link>
+        <router-link :to="{name: 'scenario', params: {id: s.id}}">{{ s.name }}</router-link>
         <!-- Delete -->
         <ApolloMutation :mutation="deleteScenario" :variables="{id: s.id}" :update="updateDelete">
-          <template slot-scope="{ mutate, loading, error }">
+          <template slot-scope="{mutate, loading, error}">
             <div v-if="loading">Loading</div>
             <button else :disabled="loading" class="delete" @click="mutate()">X</button>
             <p v-if="error">An error occured: {{ error }}</p>
@@ -33,11 +28,7 @@
 </template>
 
 <script>
-import {
-  ALL_SCENARIOS,
-  CREATE_SCENARIO,
-  DELETE_SCENARIO
-} from '../config/graph.js';
+import {ALL_SCENARIOS, CREATE_SCENARIO, DELETE_SCENARIO} from '../config/graph.js';
 
 export default {
   name: 'Scenarios',
@@ -56,21 +47,21 @@ export default {
     updateCreate(
       proxy,
       {
-        data: { createScenario }
+        data: {createScenario}
       }
     ) {
-      const data = proxy.readQuery({ query: ALL_SCENARIOS });
+      const data = proxy.readQuery({query: ALL_SCENARIOS});
       data.allScenarios.push(createScenario);
-      proxy.writeQuery({ query: ALL_SCENARIOS, data });
+      proxy.writeQuery({query: ALL_SCENARIOS, data});
     },
     updateDelete(
       store,
       {
-        data: { deleteScenario }
+        data: {deleteScenario}
       }
     ) {
-      const query = { query: ALL_SCENARIOS };
-      const { allScenarios } = store.readQuery({ query: ALL_SCENARIOS });
+      const query = {query: ALL_SCENARIOS};
+      const {allScenarios} = store.readQuery({query: ALL_SCENARIOS});
       store.writeQuery({
         ...query,
         data: {

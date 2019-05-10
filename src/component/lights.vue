@@ -3,14 +3,14 @@
     <!-- Add Light -->
     <ApolloMutation
       :mutation="createLight"
-      :variables="{deviceId : selectedLight.deviceId, power:'ON', bright: 100, rgb:[255,255,255], sceneId}"
+      :variables="{deviceId: selectedLight.deviceId, power: 'ON', bright: 100, rgb: [255, 255, 255], sceneId}"
       :update="update"
       @done="onDone"
     >
-      <template slot-scope="{ mutate, loading, error }">
+      <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
-        <select v-model="selectedLight" :disabled="loading || lightsSorted.length ===0">
-          <option/>
+        <select v-model="selectedLight" :disabled="loading || lightsSorted.length === 0">
+          <option />
           <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.deviceId }}</option>
         </select>
         <button :disabled="!selectedLight.deviceId" @click="mutate()">Add light</button>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { CREATE_LIGHT, GET_LIGHTS } from '../config/graph.js';
+import {CREATE_LIGHT, GET_LIGHTS} from '../config/graph.js';
 import light from './light';
 
 export default {
@@ -41,9 +41,7 @@ export default {
   },
   computed: {
     lightsSorted() {
-      return this.$store.state.lights
-        .filter(l => !this.allLights.find(sl => sl.deviceId === l.deviceId))
-        .sort();
+      return this.$store.state.lights.filter(l => !this.allLights.find(sl => sl.deviceId === l.deviceId)).sort();
     }
   },
   methods: {
@@ -53,7 +51,7 @@ export default {
     update(
       proxy,
       {
-        data: { createLight }
+        data: {createLight}
       }
     ) {
       const query = {
@@ -64,7 +62,7 @@ export default {
       };
       const data = proxy.readQuery(query);
       data.allLights.push(createLight);
-      proxy.writeQuery({ ...query, data });
+      proxy.writeQuery({...query, data});
     }
   },
   apollo: {

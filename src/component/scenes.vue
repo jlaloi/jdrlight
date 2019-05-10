@@ -9,7 +9,7 @@
 <script>
 import scene from './scene';
 import sceneAdd from './sceneAdd';
-import { GET_SCENES } from '../config/graph.js';
+import {GET_SCENES} from '../config/graph.js';
 
 export default {
   name: 'Scenes',

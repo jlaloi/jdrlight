@@ -7,11 +7,11 @@
       :variables="{id: light.id, power, bright: Number(bright), rgb}"
       :update="update"
     >
-      <template slot-scope="{ mutate, loading, error }">
+      <template slot-scope="{mutate, loading, error}">
         <!-- Bright -->
-        <input v-model="bright" type="range" min="0" max="100" step="5">
+        <input v-model="bright" type="range" min="0" max="100" step="5" />
         <!-- Color -->
-        <input v-model="color" type="color">
+        <input v-model="color" type="color" />
         <!-- Power -->
         <select v-model="power">
           <option value="ON">ON</option>
@@ -26,7 +26,7 @@
     </ApolloMutation>
     <!-- Action Delete -->
     <ApolloMutation :mutation="deleteLight" :variables="{id: light.id}" :update="updateDelete">
-      <template slot-scope="{ mutate, loading, error }">
+      <template slot-scope="{mutate, loading, error}">
         <button :disabled="loading" @click="mutate()">Delete</button>
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
@@ -36,7 +36,7 @@
 
 <script>
 import HTTP from '../config/http';
-import { DELETE_LIGHT, UPDATE_LIGHT, GET_LIGHTS } from '../config/graph.js';
+import {DELETE_LIGHT, UPDATE_LIGHT, GET_LIGHTS} from '../config/graph.js';
 
 export default {
   name: 'Light',
@@ -58,8 +58,7 @@ export default {
   },
   computed: {
     rgb() {
-      if (this.color)
-        return this.color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16));
+      if (this.color) return this.color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16));
       else return undefined;
     },
     getConfig() {
@@ -87,18 +86,18 @@ export default {
     update(
       proxy,
       {
-        data: { updateLight }
+        data: {updateLight}
       }
     ) {
       const data = proxy.readQuery(this.query);
       const lightIndex = data.allLights.findIndex(l => l.id == this.light.id);
       data.allLights[lightIndex] = updateLight;
-      proxy.writeQuery({ ...this.query, data });
+      proxy.writeQuery({...this.query, data});
     },
     updateDelete(
       proxy,
       {
-        data: { deleteLight }
+        data: {deleteLight}
       }
     ) {
       const data = proxy.readQuery(this.query);
@@ -110,16 +109,11 @@ export default {
       });
     },
     reset() {
-      ({ power: this.power, bright: this.bright } = this.light);
+      ({power: this.power, bright: this.bright} = this.light);
       this.color = this.rgbToHex(this.light.rgb);
     },
     rgbToHex(rgb) {
-      return (
-        '#' +
-        ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2])
-          .toString(16)
-          .slice(1)
-      );
+      return '#' + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
     }
   }
 };

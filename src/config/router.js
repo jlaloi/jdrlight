@@ -7,8 +7,8 @@ import Dashboard from '../component/dashboard';
 Vue.use(VueRouter);
 
 export const routes = [
-  { title: 'Dashboard', path: '/', component: Dashboard },
-  { title: 'Scenario', path: '/scenario', component: Scenarios },
+  {title: 'Dashboard', path: '/', component: Dashboard},
+  {title: 'Scenario', path: '/scenario', component: Scenarios},
   {
     title: 'Scenario',
     path: '/scenario/:id',
