@@ -54,7 +54,7 @@ export default {
       const player = YouTubePlayer(this.ytPlayerId, this.ytConfig);
       player.loadVideoById(this.music);
       if (!this.config) player.playVideo();
-      else player.stopVideo(); // Lib bug
+      else player.stopVideo();
     }
   }
 };

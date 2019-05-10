@@ -1,6 +1,6 @@
 <template>
   <div id="scenarios">
-    <!-- CREATE -->
+    <!-- Create -->
     <ApolloMutation
       :mutation="createScenario"
       :variables="{name}"
@@ -14,12 +14,12 @@
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
     </ApolloMutation>
-    <!-- ALL -->
+    <!-- List All -->
     <ul>
       <li v-for="s in allScenarios" :key="s.id">
-        <!-- MOVE -->
+        <!-- Detail -->
         <router-link :to="{name: 'scenario', params: { id: s.id }}">{{s.name}}</router-link>
-        <!-- DELETE -->
+        <!-- Delete -->
         <ApolloMutation :mutation="deleteScenario" :variables="{id: s.id}" :update="updateDelete">
           <template slot-scope="{ mutate, loading, error }">
             <div v-if="loading">Loading</div>

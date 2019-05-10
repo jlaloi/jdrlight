@@ -1,5 +1,6 @@
 <template>
   <div id="lights">
+    <!-- Add Light -->
     <ApolloMutation
       :mutation="createLight"
       :variables="{deviceId : selectedLight.deviceId, power:'ON', bright: 100, rgb:[255,255,255], sceneId}"
@@ -16,6 +17,7 @@
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
     </ApolloMutation>
+    <!-- Light  List -->
     <light v-for="l in allLights" :key="l.id" :light="l"></light>
   </div>
 </template>

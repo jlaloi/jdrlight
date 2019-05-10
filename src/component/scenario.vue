@@ -4,6 +4,7 @@
     <ApolloMutation v-else :mutation="updateScenario" :variables="{id, name}" @done="onDone">
       <template slot-scope="{ mutate, loading, error }">
         <h1 @click="onDone">{{Scenario.name}}</h1>
+        <!--Name Edit -->
         <div v-if="toggleChangeName">
           <input v-model="name" :disabled="loading" type="text" placeholder="New scenario name">
           <div v-if="loading">Loading...</div>
@@ -12,6 +13,7 @@
         </div>
       </template>
     </ApolloMutation>
+    <!-- Scene List -->
     <scenes v-if="!$apollo.loading" :scenario-id="id"></scenes>
   </div>
 </template>

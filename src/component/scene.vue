@@ -2,26 +2,26 @@
   <div id="scene">
     <ApolloMutation
       :mutation="updateScene"
-      :variables="{id: scene.id, name: scene.name, music: scene.music}"
+      :variables="{id: scene.id, name, music}"
       :update="update"
     >
       <template slot-scope="{ mutate, loading, error }">
         <div v-if="loading">Loading</div>
         <div v-else>
-          <input v-model="scene.name" type="text" placeholder="Scene name" class="sceneName">
-          <!-- AUDIO -->
+          <input v-model="name" type="text" placeholder="Scene name" class="sceneName">
+          <!-- Audio -->
           <div class="audio">
-            <select v-model="scene.music">
+            <select v-model="music">
               <option/>
               <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
             </select>
-            <input v-model="scene.music" type="text" placeholder="YT id">
-            <audio-player v-if="scene.music" :key="scene.music" config="true" :music="scene.music"></audio-player>
+            <input v-model="music" type="text" placeholder="YT id">
+            <audio-player v-if="music" :key="music" config="true" :music="music"></audio-player>
           </div>
-          <!-- LIGHTS -->
+          <!-- Lights -->
           <lights :scene-id="scene.id"></lights>
-          <!-- ACTIONS -->
-          <button @click="mutate()">Save scene</button>
+          <!-- Actions -->
+          <button :class="{unsaved}" @click="mutate()">Save scene</button>
           <scene-delete :scene="scene"></scene-delete>
         </div>
         <p v-if="error">An error occured: {{ error }}</p>
@@ -46,7 +46,9 @@ export default {
   props: ['scene'],
   data() {
     return {
-      updateScene: UPDATE_SCENE
+      updateScene: UPDATE_SCENE,
+      name: undefined,
+      music: undefined
     };
   },
   computed: {
@@ -55,9 +57,18 @@ export default {
     },
     sceneLights() {
       return this.scene.lights.slice(0).sort((a, b) => a.deviceId - b.deviceId);
+    },
+    unsaved() {
+      return this.name !== this.scene.name || this.music != this.scene.music;
     }
   },
+  mounted() {
+    this.reset();
+  },
   methods: {
+    reset() {
+      ({ name: this.name, music: this.music } = this.scene);
+    },
     update(
       proxy,
       {

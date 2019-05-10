@@ -110,8 +110,7 @@ export default {
       });
     },
     reset() {
-      this.power = this.light.power;
-      this.bright = this.light.bright;
+      ({ power: this.power, bright: this.bright } = this.light);
       this.color = this.rgbToHex(this.light.rgb);
     },
     rgbToHex(rgb) {
