@@ -11,12 +11,17 @@
       <a v-for="s in scenario.scenes" :key="s.id" @click="playScene(s)">{{ s.name }}</a>
     </div>
     <!--Player(s) -->
-    <audio-player v-if="music" :key="music" :music="music"></audio-player>
+    <audio-player
+      v-if="scene.music"
+      :key="scene.music"
+      :music="scene.music"
+      :on-playing="onMusicPlaying"
+    ></audio-player>
   </div>
 </template>
 
 <script>
-import { ALL_DASHBOARD } from '../config/graph.js';
+import {ALL_DASHBOARD} from '../config/graph.js';
 import HTTP from '../config/http';
 import audioPlayer from './audioPlayer';
 
@@ -29,14 +34,20 @@ export default {
     return {
       allScenarios: [],
       scenario: undefined,
-      music: undefined
+      scene: {}
     };
   },
   methods: {
-    async playScene(scene) {
-      this.music = scene.music;
-      for (let i = 0; i < scene.lights.length; i++)
-        await HTTP.post(`/light/${scene.lights[i].deviceId}`, scene.lights[i]);
+    playScene(scene) {
+      this.scene = scene;
+      if (!this.scene.music) this.updateLight();
+    },
+    async updateLight() {
+      for (let i = 0; i < this.scene.lights.length; i++)
+        await HTTP.post(`/light/${this.scene.lights[i].deviceId}`, this.scene.lights[i]);
+    },
+    onMusicPlaying() {
+      this.updateLight();
     }
   },
   apollo: {
