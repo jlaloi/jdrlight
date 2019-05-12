@@ -1,6 +1,6 @@
 <template>
   <div id="light">
-    <h4>{{ light.deviceId }}</h4>
+    <p>{{ light.deviceId }}</p>
     <!-- Fields -->
     <ApolloMutation
       :mutation="updateLight"
@@ -128,11 +128,11 @@ export default {
   text-align: center;
   margin: 0.25em;
   padding: 0.25em;
-  width: 11em;
+  width: 10em;
   input,
   button,
   select {
-    width: 10em;
+    width: 9em;
     display: block;
     margin-left: auto;
     margin-right: auto;

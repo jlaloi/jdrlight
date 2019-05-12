@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
-#sceneAdd {
+#sceneDelete {
   display: inline-block;
 }
 </style>

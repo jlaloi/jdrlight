@@ -1,24 +1,28 @@
 <template>
   <div id="scene">
-    <ApolloMutation :mutation="updateScene" :variables="{id: scene.id, name, music}" :update="update">
+    <ApolloMutation
+      :mutation="updateScene"
+      :variables="{id: scene.id, name, music}"
+      :update="update"
+    >
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
         <div v-else>
-          <input v-model="name" type="text" placeholder="Scene name" class="sceneName" />
+          <input v-model="name" type="text" placeholder="Scene name" class="sceneName">
           <!-- Audio -->
           <div class="audio">
             <select v-model="music">
-              <option />
+              <option/>
               <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
             </select>
-            <input v-model="music" type="text" placeholder="YT id" />
+            <input v-model="music" type="text" placeholder="YT id">
             <audio-player v-if="music" :key="music" config="true" :music="music"></audio-player>
           </div>
-          <!-- Lights -->
-          <lights :scene-id="scene.id"></lights>
           <!-- Actions -->
           <button :class="{unsaved}" @click="mutate()">Save scene</button>
           <scene-delete :scene="scene"></scene-delete>
+          <!-- Lights -->
+          <lights :scene-id="scene.id"></lights>
         </div>
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
@@ -99,9 +103,14 @@ export default {
   input,
   button,
   select {
-    display: block;
-    width: 23em;
     font-size: 1em;
+  }
+  button {
+    display: inline-block;
+    width: 10em;
+  }
+  input {
+    width: 20.75em;
   }
   .sceneName {
     font-weight: bold;
@@ -116,10 +125,10 @@ export default {
       margin: 0.25em;
     }
     input {
-      width: 13em;
+      width: 12.5em;
     }
     select {
-      width: 9.5em;
+      width: 7.5em;
     }
   }
 }

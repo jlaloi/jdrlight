@@ -10,10 +10,10 @@
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
         <select v-model="selectedLight" :disabled="loading || lightsSorted.length === 0">
-          <option />
+          <option/>
           <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.deviceId }}</option>
         </select>
-        <button :disabled="!selectedLight.deviceId" @click="mutate()">Add light</button>
+        <button :disabled="!selectedLight.deviceId" @click="mutate()">Add light to scene</button>
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
     </ApolloMutation>
@@ -78,12 +78,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import '../styles/config';
 #lights {
+  border-top: $border;
   margin: 0;
   padding: 0;
   select,
   button {
-    width: 11em;
+    width: 10em;
     display: inline-block;
   }
 }
