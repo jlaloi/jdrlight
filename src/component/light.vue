@@ -9,9 +9,9 @@
     >
       <template slot-scope="{mutate, loading, error}">
         <!-- Bright -->
-        <input v-model="bright" type="range" min="0" max="100" step="5" />
+        <input v-model="bright" type="range" min="0" max="100" step="5" :title="bright + ' %'">
         <!-- Color -->
-        <input v-model="color" type="color" />
+        <input v-model="color" type="color">
         <!-- Power -->
         <select v-model="power">
           <option value="ON">ON</option>

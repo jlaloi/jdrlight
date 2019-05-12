@@ -3,7 +3,7 @@
     <div v-if="$apollo.loading">Loading..</div>
     <!-- Scenario list -->
     <select v-else v-model="scenario">
-      <option />
+      <option/>
       <option v-for="s in allScenarios" :key="s.id" :value="s">{{ s.name }}</option>
     </select>
     <!-- Scene list -->
@@ -12,9 +12,9 @@
     </div>
     <!--Player(s) -->
     <audio-player
-      v-if="scene.music"
-      :key="scene.music"
-      :music="scene.music"
+      v-if="music"
+      :key="music"
+      :music="music"
       :on-playing="onMusicPlaying"
     ></audio-player>
   </div>
@@ -34,13 +34,15 @@ export default {
     return {
       allScenarios: [],
       scenario: undefined,
+      music: undefined,
       scene: {}
     };
   },
   methods: {
     playScene(scene) {
       this.scene = scene;
-      if (!this.scene.music) this.updateLight();
+      if (!this.scene.music || this.scene.music === this.music) this.updateLight();
+      this.music = this.scene.music;
     },
     async updateLight() {
       for (let i = 0; i < this.scene.lights.length; i++)
@@ -63,23 +65,25 @@ export default {
 @import '../styles/config';
 #dashboard {
   text-align: center;
-  a {
-    text-decoration: none;
-    cursor: pointer;
-    border: $border;
-    background-color: $bg2;
-    color: #eee;
-    font-weight: bold;
-    border-radius: 2px;
-    width: 10em;
-    height: 3em;
-    line-height: 3em;
-    text-align: center;
-    display: inline-block;
-    margin: 0.5em;
-  }
-  a:hover {
-    background-color: #111;
+  div {
+    a {
+      text-decoration: none;
+      cursor: pointer;
+      border: $border;
+      background-color: $bg2;
+      color: #eee;
+      font-weight: bold;
+      border-radius: 2px;
+      padding: 0.5em;
+      width: 10em;
+      height: 3em;
+      text-align: center;
+      display: inline-grid;
+      margin: 0.5em;
+    }
+    a:hover {
+      background-color: #111;
+    }
   }
 }
 </style>
