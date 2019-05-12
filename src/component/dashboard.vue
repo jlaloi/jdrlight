@@ -11,12 +11,7 @@
       <a v-for="s in scenario.scenes" :key="s.id" @click="playScene(s)">{{ s.name }}</a>
     </div>
     <!--Player(s) -->
-    <audio-player
-      v-if="music"
-      :key="music"
-      :music="music"
-      :on-playing="onMusicPlaying"
-    ></audio-player>
+    <audio-player v-if="music" :music="music" :on-playing="onMusicPlaying"></audio-player>
   </div>
 </template>
 

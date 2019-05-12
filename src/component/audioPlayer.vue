@@ -1,7 +1,9 @@
 <template>
   <div v-if="music" id="audioPlayer">
     <audio v-if="isAudioFile" :id="audioPlayerId" controls loop></audio>
-    <div v-else :id="ytPlayerId"></div>
+    <div v-else>
+      <div :id="ytPlayerId"></div>
+    </div>
   </div>
 </template>
 
@@ -13,6 +15,7 @@ export default {
   props: ['music', 'config', 'onPlaying'],
   data() {
     return {
+      audioPlayer: undefined,
       youTubePlayer: undefined
     };
   },
@@ -32,36 +35,56 @@ export default {
       };
     },
     isAudioFile() {
-      return this.music.startsWith('music/');
+      return this.isFile(this.music);
     }
   },
   watch: {
-    music() {
-      this.playMusic();
+    music(newMusic, oldMusic) {
+      if (this.isAudioFile && this.youTubePlayer) {
+        this.youTubePlayer.destroy();
+        this.youTubePlayer = undefined;
+      }
+      // Required YT Player
+      this.$nextTick(() => {
+        if (!oldMusic || this.isAudioFile !== this.isFile(oldMusic)) this.initPlayer();
+        else this.playMusic();
+      });
     }
   },
   mounted() {
-    this.playMusic();
+    this.initPlayer();
   },
   methods: {
+    isFile(music) {
+      return music && music.indexOf('.') !== -1;
+    },
+    initPlayer() {
+      if (this.isAudioFile) this.initAudioFile();
+      else this.initVideo();
+    },
     playMusic() {
-      if (!this.music) return;
       if (this.isAudioFile) this.playAudioFile();
       else this.playVideo();
     },
-    playAudioFile() {
-      const audio = document.getElementById(this.audioPlayerId);
-      audio.onplaying = this.playing;
-      audio.src = this.music;
-      audio.load();
-      if (!this.config) audio.play();
+    initAudioFile() {
+      this.audioPlayer = document.getElementById(this.audioPlayerId);
+      this.audioPlayer.onplaying = this.playing;
+      this.playAudioFile();
     },
-    playVideo() {
-      this.youTubePlayer = YouTubePlayer(this.ytPlayerId, this.ytConfig);
-      this.youTubePlayer.loadVideoById(this.music);
-      this.youTubePlayer.on('stateChange', event => {
+    playAudioFile() {
+      this.audioPlayer.src = this.music;
+      this.audioPlayer.load();
+      if (!this.config) this.audioPlayer.play();
+    },
+    initVideo() {
+      this.youTubePlayer = YouTubePlayer(this.ytPlayerId, {...this.ytConfig });
+      this.youTubePlayerEvent = this.youTubePlayer.on('stateChange', event => {
         if (event && event.data === 1) this.playing();
       });
+      this.playVideo();
+    },
+    playVideo() {
+      this.youTubePlayer.loadVideoById(this.music);
       if (!this.config) this.youTubePlayer.playVideo();
       else this.youTubePlayer.stopVideo();
     },
