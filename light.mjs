@@ -5,7 +5,8 @@ export const look = new Yeelight.Lookup();
 export const getLights = () =>
   look.getLights().map(l => {
     return {
-      deviceId: l.id
+      deviceId: l.id,
+      name: l.name
     };
   });
 //[{deviceId: 'Dummy'}, {deviceId: 'Dummy2'}];
@@ -47,3 +48,10 @@ export const setRGB = (id, value) => {
   console.log(`Updating ${id} to color ${value}`);
   updateLight(light => light.setRGB(value), id);
 };
+
+// Need to modify the lib (@node-yeelight-wifi/yeelight.js:417) to allow it but command should be accepted
+export const setName = (id, name) => {
+  console.log(`Updating ${id} to name ${name}`);
+  updateLight(light => light.sendCommand('set_name', [name]), id);
+};
+//setTimeout(() => setName('0x0000000000000000', 'Salle à manger'), 1000);

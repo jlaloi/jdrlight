@@ -1,6 +1,6 @@
 <template>
   <div id="light">
-    <p>{{ light.deviceId }}</p>
+    <p>{{ name }}</p>
     <!-- Fields -->
     <ApolloMutation
       :mutation="updateLight"
@@ -60,6 +60,12 @@ export default {
     rgb() {
       if (this.color) return this.color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16));
       else return undefined;
+    },
+    device() {
+      return this.$store.state.lights.find(l => l.deviceId == this.light.deviceId) || {};
+    },
+    name() {
+      return this.device.name || this.light.deviceId;
     },
     getConfig() {
       return {

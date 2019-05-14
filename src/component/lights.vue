@@ -11,7 +11,7 @@
         <div v-if="loading">Loading</div>
         <select v-model="selectedLight" :disabled="loading || lightsSorted.length === 0">
           <option/>
-          <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.deviceId }}</option>
+          <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.name || l.deviceId }}</option>
         </select>
         <button :disabled="!selectedLight.deviceId" @click="mutate()">Add light to scene</button>
         <p v-if="error">An error occured: {{ error }}</p>
