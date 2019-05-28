@@ -29,7 +29,7 @@ const castUpdate = (deviceId, onConnect) =>
     }
   });
 
-export const getCasts = () => devices;
+export const getCasts = () => devices.map(c => c.config.name);
 
 export const getCast = deviceId => devices.find(l => l.config.name === deviceId);
 

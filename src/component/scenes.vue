@@ -36,6 +36,8 @@ export default {
   created() {
     this.$store.dispatch('fetchLights');
     this.$store.dispatch('fetchMusics');
+    this.$store.dispatch('fetchCasts');
+    this.$store.dispatch('fetchImages');
   }
 };
 </script>
