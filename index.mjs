@@ -4,6 +4,7 @@ import compression from 'compression';
 
 import fs from 'fs';
 import {getLights, setBright, setPower, setRGB} from './light';
+import {getCasts, castImage, castStop} from './cast';
 
 const PORT = 9090;
 const DIR_PUBLIC = 'public/';
@@ -23,6 +24,28 @@ app.post('/light/:deviceId', async (req, res) => {
   res.json({
     result: 'ok'
   });
+});
+
+app.get('/cast', (req, res) => res.json(getCasts()));
+app.post('/cast/:deviceId', async (req, res) => {
+  try {
+    res.json(await castImage(req.params.deviceId,  {
+      url: req.body.url,
+      contentType: req.body.contentType || 'image/jpeg'
+    }));
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
+
+app.delete('/cast/:deviceId', async (req, res) => {
+  try {
+    res.json(await castStop(req.params.deviceId));
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
 });
 
 app.use(Express.static(DIR_PUBLIC));

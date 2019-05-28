@@ -10,6 +10,7 @@ type Scene @model {
   music: String
   lights: [Light!]! @relation(name: "SceneLights")
   scenario: Scenario @relation(name: "ScenarioScenes")
+  casts: [Cast!]! @relation(name: "SceneCasts")
 }
 
 type Light @model {
@@ -19,4 +20,11 @@ type Light @model {
   bright: Int
   rgb: [Int!]
   scene: Scene @relation(name: "SceneLights")
+}
+
+type Cast @model {
+  id: ID! @isUnique
+  deviceId: String
+  media: String
+  scene: Scene @relation(name: "SceneCasts")
 }
