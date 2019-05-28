@@ -20,3 +20,5 @@ export const routes = [
 export const router = new VueRouter({
   routes
 });
+
+export const serverUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + '/';

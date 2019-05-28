@@ -21,6 +21,8 @@
           <!-- Actions -->
           <button :class="{unsaved}" @click="mutate()">Save scene</button>
           <scene-delete :scene="scene"></scene-delete>
+           <!-- Casts -->
+          <casts :scene-id="scene.id"></casts>
           <!-- Lights -->
           <lights :scene-id="scene.id"></lights>
         </div>
@@ -34,6 +36,7 @@
 import audioPlayer from './audioPlayer';
 import sceneDelete from './sceneDelete';
 import lights from './lights';
+import casts from './casts';
 import {UPDATE_SCENE, GET_SCENES} from '../config/graph';
 
 export default {
@@ -41,7 +44,8 @@ export default {
   components: {
     audioPlayer,
     sceneDelete,
-    lights
+    lights,
+    casts
   },
   props: ['scene'],
   data() {

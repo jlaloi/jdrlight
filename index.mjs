@@ -37,7 +37,7 @@ app.post('/cast/:deviceId', async (req, res) => {
   try {
     res.json(
       await castImage(req.params.deviceId, {
-        url: req.body.url,
+        url: req.body.media,
         contentType: req.body.contentType || 'image/jpeg'
       })
     );

@@ -36,12 +36,16 @@ export default {
   methods: {
     playScene(scene) {
       this.scene = scene;
+      this.updateCast();
       if (!this.scene.music || this.scene.music === this.music) this.updateLight();
       this.music = this.scene.music;
     },
     async updateLight() {
       for (let i = 0; i < this.scene.lights.length; i++)
         await HTTP.post(`/light/${this.scene.lights[i].deviceId}`, this.scene.lights[i]);
+    },
+    updateCast() {
+      this.scene.casts.forEach(cast => HTTP.post(`/cast/${cast.deviceId}`, {media: cast.media}));
     },
     onMusicPlaying() {
       this.updateLight();

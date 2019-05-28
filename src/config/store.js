@@ -47,7 +47,7 @@ export const store = new Vuex.Store({
     },
     async fetchImages(context) {
       const images = (await HTTP.get('/images')).body;
-      context.commit('setCasts', {
+      context.commit('setImages', {
         images
       });
     }

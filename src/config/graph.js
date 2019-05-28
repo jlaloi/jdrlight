@@ -177,8 +177,62 @@ export const ALL_DASHBOARD = gql`
           power
           bright
           rgb
+        },
+        casts {
+          deviceId
+          media
         }
       }
+    }
+  }
+`;
+
+/*
+ * LIGHT
+ */
+export const GET_CASTS = gql`
+  query($sceneId: ID!) {
+    allCasts(filter: {scene: {id: $sceneId}}) {
+      id
+      deviceId
+      media
+      scene {
+        id
+      }
+    }
+  }
+`;
+
+export const CREATE_CAST = gql`
+  mutation($deviceId: String, $media: String, $sceneId: ID!) {
+    createCast(deviceId: $deviceId, media: $media, sceneId: $sceneId) {
+      id
+      deviceId
+      media
+      scene {
+        id
+      }
+    }
+  }
+`;
+
+export const UPDATE_CAST = gql`
+  mutation($id: ID!, $media: String) {
+    updateCast(id: $id, media: $media,) {
+      id
+      deviceId
+      media
+      scene {
+        id
+      }
+    }
+  }
+`;
+
+export const DELETE_CAST = gql`
+  mutation($id: ID!) {
+    deleteCast(id: $id) {
+      id
     }
   }
 `;
