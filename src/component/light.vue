@@ -172,6 +172,7 @@ export default {
   select {
     width: 3.6em;
     display: inline-block;
+    font-size: 1em;
   }
   .actions {
     display: inline-block;
