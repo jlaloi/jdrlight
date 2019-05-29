@@ -2,14 +2,15 @@ import chromecastjs from 'chromecast-js';
 
 let browser;
 
-let devices = [];
+const devices = [];
 
 export const initLookUpCast = () => {
-  devices = [];
   browser = new chromecastjs.Browser();
   browser.on('deviceOn', device => {
-    console.log(`Cast device detected : ${device.config.name}`);
-    devices.push(device);
+    if (!getCast(device.config.name)) {
+      console.log(`Cast device detected : ${device.config.name}`);
+      devices.push(device);
+    }
   });
 };
 
