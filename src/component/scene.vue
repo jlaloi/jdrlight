@@ -9,6 +9,20 @@
         <div v-if="loading">Loading</div>
         <div v-else>
           <input v-model="name" type="text" placeholder="Scene name" class="sceneName">
+          <!-- Actions -->
+          <div class="actions">
+            <i
+              v-if="!loading"
+              class="material-icons clickable"
+              :class="{unsaved}"
+              @click="mutate()"
+            >save</i>
+            <i
+              v-if="!deleteLoading"
+              class="material-icons clickable"
+              @click="confirm(`Delete ${scene.name}?`) && delScene()"
+            >delete</i>
+          </div>
           <!-- Audio -->
           <div class="audio">
             <select v-model="music">
@@ -18,15 +32,12 @@
             <input v-model="music" type="text" placeholder="YT id">
             <audio-player v-if="music" :key="music" config="true" :music="music"></audio-player>
           </div>
-          <!-- Actions -->
-          <button :class="{unsaved}" @click="mutate()">Save scene</button>
-          <scene-delete :scene="scene"></scene-delete>
-           <!-- Casts -->
+          <!-- Casts -->
           <casts :scene-id="scene.id"></casts>
           <!-- Lights -->
           <lights :scene-id="scene.id"></lights>
         </div>
-        <p v-if="error">An error occured: {{ error }}</p>
+        <p v-if="error || deleteError">An error occured: {{ error || deleteError}}</p>
       </template>
     </ApolloMutation>
   </div>
@@ -34,16 +45,14 @@
 
 <script>
 import audioPlayer from './audioPlayer';
-import sceneDelete from './sceneDelete';
 import lights from './lights';
 import casts from './casts';
-import {UPDATE_SCENE, GET_SCENES} from '../config/graph';
+import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES} from '../config/graph';
 
 export default {
   name: 'Scene',
   components: {
     audioPlayer,
-    sceneDelete,
     lights,
     casts
   },
@@ -52,7 +61,9 @@ export default {
     return {
       updateScene: UPDATE_SCENE,
       name: undefined,
-      music: undefined
+      music: undefined,
+      deleteLoading: false,
+      deleteError: undefined
     };
   },
   computed: {
@@ -89,12 +100,51 @@ export default {
       const sceneIndex = data.allScenes.findIndex(s => s.id === this.scene.id);
       data.allScenes[sceneIndex] = updateScene;
       proxy.writeQuery({...query, data});
+    },
+    updateDelete(
+      store,
+      {
+        data: {deleteScene}
+      }
+    ) {
+      const query = {
+        query: GET_SCENES,
+        variables: {
+          scenario: this.scene.scenario.id
+        }
+      };
+      const {allScenes} = store.readQuery(query);
+      store.writeQuery({
+        ...query,
+        data: {
+          allScenes: allScenes.filter(s => s.id !== deleteScene.id)
+        }
+      });
+    },
+    delScene() {
+      this.deleteLoading = true;
+      this.deleteError = undefined;
+      this.$apollo
+        .mutate({
+          mutation: DELETE_SCENE,
+          variables: {
+            id: this.scene.id
+          },
+          update: this.updateDelete
+        })
+        .catch(error => (this.deleteError = error))
+        .then(() => {
+          this.deleteLoading = false;
+        });
+    },
+    confirm(msg) {
+      return window.confirm(msg);
     }
   }
 };
 </script>
 
-<style lang="scss" scsoped>
+<style lang="scss" scoped>
 @import '../styles/config';
 #scene {
   border: $border;
@@ -114,7 +164,11 @@ export default {
     width: 10em;
   }
   input {
-    width: 20.75em;
+    width: 16.5em;
+  }
+  .actions {
+    width: 4em;
+    display: inline-block;
   }
   .sceneName {
     font-weight: bold;

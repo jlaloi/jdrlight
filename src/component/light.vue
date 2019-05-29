@@ -18,17 +18,17 @@
           <option value="OFF">OFF</option>
         </select>
         <!-- Actions -->
-        <button id="test" @click="testLight">Test</button>
-        <div v-if="loading">Loading</div>
-        <button v-else :class="{unsaved}" @click="mutate()">Save</button>
-        <p v-if="error">An error occured: {{ error }}</p>
-      </template>
-    </ApolloMutation>
-    <!-- Action Delete -->
-    <ApolloMutation :mutation="deleteLight" :variables="{id: light.id}" :update="updateDelete">
-      <template slot-scope="{mutate, loading, error}">
-        <button :disabled="loading" @click="mutate()">Delete</button>
-        <p v-if="error">An error occured: {{ error }}</p>
+        <div class="actions">
+          <i class="material-icons clickable" @click="testLight()">play_circle_outline</i>
+          <div v-if="loading || deleteLoading">Loading</div>
+          <i v-else class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
+          <i
+            v-if="!deleteLoading"
+            class="material-icons clickable"
+            @click="confirm(`Delete ${name}?`) && delLight()"
+          >delete</i>
+        </div>
+        <p v-if="error || deleteError">An error occured: {{ error || deleteError}}</p>
       </template>
     </ApolloMutation>
   </div>
@@ -53,7 +53,9 @@ export default {
         variables: {
           sceneId: this.light.scene.id
         }
-      }
+      },
+      deleteLoading: false,
+      deleteError: undefined
     };
   },
   computed: {
@@ -114,12 +116,31 @@ export default {
         }
       });
     },
+    delLight() {
+      this.deleteLoading = true;
+      this.deleteError = undefined;
+      this.$apollo
+        .mutate({
+          mutation: DELETE_LIGHT,
+          variables: {
+            id: this.light.id
+          },
+          update: this.updateDelete
+        })
+        .catch(error => (this.deleteError = error))
+        .then(() => {
+          this.deleteLoading = false;
+        });
+    },
     reset() {
       ({power: this.power, bright: this.bright} = this.light);
       this.color = this.rgbToHex(this.light.rgb);
     },
     rgbToHex(rgb) {
       return '#' + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+    },
+    confirm(msg) {
+      return window.confirm(msg);
     }
   }
 };
@@ -128,6 +149,10 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/config';
 #light {
+  p {
+    margin: 0;
+    font-weight: bold;
+  }
   border: $border;
   border-radius: 2px;
   display: inline-block;
@@ -144,9 +169,11 @@ export default {
     margin-right: auto;
     margin-bottom: 0;
   }
-  select,
-  #test {
-    width: 4.35em;
+  select {
+    width: 3.6em;
+    display: inline-block;
+  }
+  .actions {
     display: inline-block;
   }
 }

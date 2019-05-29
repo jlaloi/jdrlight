@@ -1,10 +1,15 @@
 <template>
   <div id="scenarios">
     <!-- Create -->
-    <ApolloMutation :mutation="createScenario" :variables="{name}" :update="updateCreate" @done="onDone">
+    <ApolloMutation
+      :mutation="createScenario"
+      :variables="{name}"
+      :update="updateCreate"
+      @done="onDone"
+    >
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
-        <input v-model="name" :disabled="loading" type="text" placeholder="Scenario name" />
+        <input v-model="name" :disabled="loading" type="text" placeholder="Scenario name">
         <button :disabled="loading || !name" @click="mutate()">Create</button>
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
@@ -18,7 +23,11 @@
         <ApolloMutation :mutation="deleteScenario" :variables="{id: s.id}" :update="updateDelete">
           <template slot-scope="{mutate, loading, error}">
             <div v-if="loading">Loading</div>
-            <button else :disabled="loading" class="delete" @click="mutate()">X</button>
+            <i
+              v-else
+              class="material-icons clickable"
+              @click="confirm(`Delete ${s.name}?`) && mutate()"
+            >delete</i>
             <p v-if="error">An error occured: {{ error }}</p>
           </template>
         </ApolloMutation>
@@ -41,6 +50,9 @@ export default {
     };
   },
   methods: {
+    confirm(msg) {
+      return window.confirm(msg);
+    },
     onDone() {
       this.name = undefined;
     },
@@ -81,14 +93,23 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/config';
 #scenarios {
+  ul {
+    width: 20em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
   li {
     * {
       display: inline-block;
       text-decoration: none;
       color: $color2;
     }
-    button {
+    .clickable {
+      margin-left: 0.25em;
       color: $colorError;
+      font-size: 1.2em;
+      vertical-align: bottom;
     }
   }
 }

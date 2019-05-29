@@ -1,11 +1,6 @@
 <template>
   <div id="cast">
-    <p>
-      {{ cast.deviceId }}
-      <a v-if="media" :href="media" :title="media" target="_blank">
-        <img :src="media">
-      </a>
-    </p>
+    <p>{{ cast.deviceId }}</p>
     <!-- Fields -->
     <ApolloMutation :mutation="updateCast" :variables="{id: cast.id, media}" :update="update">
       <template slot-scope="{mutate, loading, error}">
@@ -16,14 +11,21 @@
         </select>
         <input v-model="media" type="text" placeholder="url">
         <!-- Actions -->
-        <div class="action">
+        <div class="actions">
+          <!-- Preview -->
+          <a v-if="media" :href="media" :title="media" target="_blank">
+            <img :src="media">
+          </a>
           <i class="material-icons clickable" @click="testCast()">play_circle_outline</i>
           <div v-if="loading || deleteLoading">Loading</div>
           <i v-else class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
-          <i v-if="!deleteLoading" class="material-icons clickable" @click="delCast()">delete</i>
-          <p v-if="deleteError">An error occured: {{ deleteError }}</p>
-          <p v-if="error">An error occured: {{ error }}</p>
+          <i
+            v-if="!deleteLoading"
+            class="material-icons clickable"
+            @click="confirm(`Delete ${cast.deviceId}?`) && delCast()"
+          >delete</i>
         </div>
+        <p v-if="error || deleteError">An error occured: {{ error || deleteError}}</p>
       </template>
     </ApolloMutation>
   </div>
@@ -117,6 +119,9 @@ export default {
     },
     reset() {
       this.media = this.cast.media;
+    },
+    confirm(msg) {
+      return window.confirm(msg);
     }
   }
 };
@@ -125,11 +130,9 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/config';
 #cast {
-  img {
-    max-width: 3em;
-    max-height: 2em;
-    border-radius: 2px;
-    margin-left: 0.25em;
+  p {
+    margin: 0;
+    font-weight: bold;
   }
   border: $border;
   border-radius: 2px;
@@ -151,8 +154,20 @@ export default {
     width: 4.35em;
     display: inline-block;
   }
-  .action {
+  .actions {
+    display: inline-block;
+    padding-top: 0.2em;
+    text-align: center;
     margin-top: 0.25em;
+    margin: 0;
+    .material-icons {
+      vertical-align: top;
+    }
+    img {
+      margin-right: 0.25em;
+      height: 24px;
+      border-radius: 2px;
+    }
   }
 }
 </style>
