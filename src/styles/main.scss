@@ -1,4 +1,5 @@
 @import './config';
+@import './md';
 
 body {
   background: $bg;
@@ -54,4 +55,8 @@ select:disabled {
 
 .unsaved {
   color: $colorError;
+}
+
+.clickable {
+  cursor: pointer;
 }

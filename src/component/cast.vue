@@ -16,17 +16,14 @@
         </select>
         <input v-model="media" type="text" placeholder="url">
         <!-- Actions -->
-        <button id="test" @click="testCast">Test</button>
-        <div v-if="loading">Loading</div>
-        <button v-else :class="{unsaved}" @click="mutate()">Save</button>
-        <p v-if="error">An error occured: {{ error }}</p>
-      </template>
-    </ApolloMutation>
-    <!-- Action Delete -->
-    <ApolloMutation :mutation="deleteCast" :variables="{id: cast.id}" :update="updateDelete">
-      <template slot-scope="{mutate, loading, error}">
-        <button :disabled="loading" @click="mutate()">Delete</button>
-        <p v-if="error">An error occured: {{ error }}</p>
+        <div class="action">
+          <i class="material-icons clickable" @click="testCast()">play_circle_outline</i>
+          <div v-if="loading || deleteLoading">Loading</div>
+          <i v-else class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
+          <i v-if="!deleteLoading" class="material-icons clickable" @click="delCast()">delete</i>
+          <p v-if="deleteError">An error occured: {{ deleteError }}</p>
+          <p v-if="error">An error occured: {{ error }}</p>
+        </div>
       </template>
     </ApolloMutation>
   </div>
@@ -52,7 +49,9 @@ export default {
         variables: {
           sceneId: this.cast.scene.id
         }
-      }
+      },
+      deleteLoading: false,
+      deleteError: undefined
     };
   },
   computed: {
@@ -100,6 +99,22 @@ export default {
         }
       });
     },
+    delCast() {
+      this.deleteLoading = true;
+      this.deleteError = undefined;
+      this.$apollo
+        .mutate({
+          mutation: DELETE_CAST,
+          variables: {
+            id: this.cast.id
+          },
+          update: this.updateDelete
+        })
+        .catch(error => (this.deleteError = error))
+        .then(() => {
+          this.deleteLoading = false;
+        });
+    },
     reset() {
       this.media = this.cast.media;
     }
@@ -135,6 +150,9 @@ export default {
   button {
     width: 4.35em;
     display: inline-block;
+  }
+  .action {
+    margin-top: 0.25em;
   }
 }
 </style>

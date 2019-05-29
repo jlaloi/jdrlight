@@ -10,6 +10,7 @@ const PORT = 9090;
 const DIR_PUBLIC = 'public/';
 const DIR_MUSIC = 'music/';
 const DIR_IMG = 'image/';
+const DIR_FONTS = 'node_modules/material-design-icons/iconfont';
 
 const app = Express();
 app.use(compression({filter: () => true}));
@@ -57,6 +58,7 @@ app.delete('/cast/:deviceId', async (req, res) => {
 });
 
 app.use(Express.static(DIR_PUBLIC));
+app.use('/fonts', Express.static(DIR_FONTS));
 app.get('/musics', (req, res) =>
   fs.readdir(DIR_PUBLIC + DIR_MUSIC, (err, files) => res.json(files.map(f => DIR_MUSIC + f)))
 );
