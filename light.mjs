@@ -1,6 +1,8 @@
 import Yeelight from 'node-yeelight-wifi';
 
-export const look = new Yeelight.Lookup();
+let look;
+
+export const initLookUpLight = () => (look = new Yeelight.Lookup());
 
 export const getLights = () =>
   look.getLights().map(l => {

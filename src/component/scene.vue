@@ -29,7 +29,7 @@
               <option/>
               <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
             </select>
-            <input v-model="music" type="text" placeholder="YT id">
+            <input v-model="music" type="text" placeholder="YT id / URL">
             <audio-player v-if="music" :key="music" config="true" :music="music"></audio-player>
           </div>
           <!-- Casts -->

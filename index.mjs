@@ -3,8 +3,8 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 
 import fs from 'fs';
-import {getLights, setBright, setPower, setRGB} from './light';
-import {getCasts, castImage, castStop} from './cast';
+import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light';
+import {getCasts, castImage, castStop, initLookUpCast} from './cast';
 
 const PORT = 9090;
 const DIR_PUBLIC = 'public/';
@@ -12,9 +12,21 @@ const DIR_MUSIC = 'music/';
 const DIR_IMG = 'image/';
 const DIR_FONTS = 'node_modules/material-design-icons/iconfont';
 
+const initLookup = () => {
+  initLookUpCast();
+  initLookUpLight();
+};
+
 const app = Express();
 app.use(compression({filter: () => true}));
 app.use(bodyParser.json());
+
+app.get('/lookup', (req, res) => {
+  initLookup();
+  res.json({
+    result: 'ok'
+  });
+});
 
 app.get('/light', (req, res) => res.json(getLights()));
 app.post('/light/:deviceId', async (req, res) => {
@@ -68,3 +80,5 @@ app.get('/images', (req, res) =>
 );
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+
+initLookup();
