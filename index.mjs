@@ -49,10 +49,15 @@ app.get('/cast', (req, res) => res.json(getCasts()));
 app.post('/cast/:deviceId', async (req, res) => {
   try {
     res.json(
-      await castImage(req.params.deviceId, {
-        url: req.body.media,
-        contentType: req.body.contentType || 'image/jpeg'
-      })
+      await castImage(
+        req.params.deviceId,
+        {
+          url: req.body.media,
+          contentType: req.body.contentType || 'image/jpeg'
+        },
+        DIR_PUBLIC + DIR_IMG,
+        (req.headers.referer || req.headers.host) + '/' + DIR_IMG
+      )
     );
   } catch (error) {
     console.log(error);

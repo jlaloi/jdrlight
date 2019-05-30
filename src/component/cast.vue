@@ -74,7 +74,11 @@ export default {
   },
   methods: {
     async testCast() {
-      await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig);
+      const media = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body;
+      if (media.url !== this.media) {
+        this.media = media.url;
+        this.$store.dispatch('fetchImages');
+      }
     },
     update(
       proxy,
