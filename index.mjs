@@ -13,8 +13,8 @@ const DIR_IMG = 'image/';
 const DIR_FONTS = 'node_modules/material-design-icons/iconfont';
 
 const initLookup = () => {
-  initLookUpCast();
   initLookUpLight();
+  initLookUpCast();
 };
 
 const app = Express();

@@ -54,11 +54,11 @@ export const castImage = async (deviceId, media, imgDir, serverHost) => {
     if (!fs.existsSync(filePath)) {
       try {
         await download(media.url, filePath);
-        media.url = serverHost + '/' + fileName;
+        media.url = serverHost + fileName;
       } catch (error) {
         console.error(error);
       }
-    } else media.url = serverHost + '/' + fileName;
+    }
   }
   console.log(`Cast image ${JSON.stringify(media)} to ${deviceId}`);
   const onConnect = (device, resolve) => device.play(media, 60, () => resolve(media));

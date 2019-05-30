@@ -16,7 +16,9 @@
           <a v-if="media" :href="media" :title="media" target="_blank">
             <img :src="media" />
           </a>
-          <i class="material-icons clickable" @click="testCast()">play_circle_outline</i>
+          <i class="material-icons clickable" :class="{rotating: testLoading}" @click="testCast()"
+            >play_circle_outline</i
+          >
           <div v-if="loading || deleteLoading">Loading</div>
           <i v-else class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
           <i
@@ -54,7 +56,8 @@ export default {
         }
       },
       deleteLoading: false,
-      deleteError: undefined
+      deleteError: undefined,
+      testLoading: false
     };
   },
   computed: {
@@ -75,11 +78,17 @@ export default {
   },
   methods: {
     async testCast() {
-      const media = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body;
-      if (media.url !== this.media) {
-        this.media = media.url;
-        this.$store.dispatch('fetchImages');
+      this.testLoading = true;
+      try {
+        const media = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body;
+        if (media.url !== this.media) {
+          this.media = media.url;
+          this.$store.dispatch('fetchImages');
+        }
+      } catch (error) {
+        console.error(error);
       }
+      this.testLoading = false;
     },
     update(
       proxy,
