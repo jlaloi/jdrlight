@@ -56,7 +56,7 @@ app.post('/cast/:deviceId', async (req, res) => {
           contentType: req.body.contentType || 'image/jpeg'
         },
         DIR_PUBLIC + DIR_IMG,
-        (req.headers.referer || req.headers.host) + '/' + DIR_IMG
+        (req.headers.referer || (req.headers.host + '/'))  + DIR_IMG
       )
     );
   } catch (error) {

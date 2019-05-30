@@ -1,6 +1,6 @@
 import chromecastjs from 'chromecast-js';
 import fs from 'fs';
-import http from 'http';
+import request from 'request';
 
 let browser;
 
@@ -70,17 +70,11 @@ export const castStop = deviceId => {
   castUpdate(deviceId, (device, resolve) => device.close(resolve));
 };
 
-export const download = (url, dest) =>
+export const download = (url, target) =>
   new Promise((resolve, reject) => {
-    console.log(`Downloading ${url} to ${dest}`);
-    const file = fs.createWriteStream(dest);
-    http
-      .get(url, response => {
-        response.pipe(file);
-        file.on('finish', () => file.close(resolve));
-      })
-      .on('error', err => {
-        fs.unlink(dest);
-        reject(err.message);
-      });
+    console.log(`Downloading ${url} to ${target}`);
+    request(url)
+      .pipe(fs.createWriteStream(target))
+      .on('error', error => reject(error))
+      .on('close', () => resolve(target));
   });
