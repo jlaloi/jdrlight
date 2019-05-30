@@ -1,15 +1,10 @@
 <template>
   <div id="scenarios">
     <!-- Create -->
-    <ApolloMutation
-      :mutation="createScenario"
-      :variables="{name}"
-      :update="updateCreate"
-      @done="onDone"
-    >
+    <ApolloMutation :mutation="createScenario" :variables="{name}" :update="updateCreate" @done="onDone">
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
-        <input v-model="name" :disabled="loading" type="text" placeholder="Scenario name">
+        <input v-model="name" :disabled="loading" type="text" placeholder="Scenario name" />
         <button :disabled="loading || !name" @click="mutate()">Create</button>
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
@@ -23,11 +18,7 @@
         <ApolloMutation :mutation="deleteScenario" :variables="{id: s.id}" :update="updateDelete">
           <template slot-scope="{mutate, loading, error}">
             <div v-if="loading">Loading</div>
-            <i
-              v-else
-              class="material-icons clickable"
-              @click="confirm(`Delete ${s.name}?`) && mutate()"
-            >delete</i>
+            <i v-else class="material-icons clickable" @click="confirm(`Delete ${s.name}?`) && mutate()">delete</i>
             <p v-if="error">An error occured: {{ error }}</p>
           </template>
         </ApolloMutation>

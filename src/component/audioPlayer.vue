@@ -77,7 +77,7 @@ export default {
       if (!this.config) this.audioPlayer.play();
     },
     initVideo() {
-      this.youTubePlayer = YouTubePlayer(this.ytPlayerId, {...this.ytConfig });
+      this.youTubePlayer = YouTubePlayer(this.ytPlayerId, {...this.ytConfig});
       this.youTubePlayerEvent = this.youTubePlayer.on('stateChange', event => {
         if (event && event.data === 1) this.playing();
       });

@@ -1,35 +1,27 @@
 <template>
   <div id="scene">
-    <ApolloMutation
-      :mutation="updateScene"
-      :variables="{id: scene.id, name, music}"
-      :update="update"
-    >
+    <ApolloMutation :mutation="updateScene" :variables="{id: scene.id, name, music}" :update="update">
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
         <div v-else>
-          <input v-model="name" type="text" placeholder="Scene name" class="sceneName">
+          <input v-model="name" type="text" placeholder="Scene name" class="sceneName" />
           <!-- Actions -->
           <div class="actions">
-            <i
-              v-if="!loading"
-              class="material-icons clickable"
-              :class="{unsaved}"
-              @click="mutate()"
-            >save</i>
+            <i v-if="!loading" class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
             <i
               v-if="!deleteLoading"
               class="material-icons clickable"
               @click="confirm(`Delete ${scene.name}?`) && delScene()"
-            >delete</i>
+              >delete</i
+            >
           </div>
           <!-- Audio -->
           <div class="audio">
             <select v-model="music">
-              <option/>
+              <option />
               <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
             </select>
-            <input v-model="music" type="text" placeholder="YT id / URL">
+            <input v-model="music" type="text" placeholder="YT id / URL" />
             <audio-player v-if="music" :key="music" config="true" :music="music"></audio-player>
           </div>
           <!-- Casts -->
@@ -37,7 +29,7 @@
           <!-- Lights -->
           <lights :scene-id="scene.id"></lights>
         </div>
-        <p v-if="error || deleteError">An error occured: {{ error || deleteError}}</p>
+        <p v-if="error || deleteError">An error occured: {{ error || deleteError }}</p>
       </template>
     </ApolloMutation>
   </div>

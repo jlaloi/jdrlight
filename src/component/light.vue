@@ -9,9 +9,9 @@
     >
       <template slot-scope="{mutate, loading, error}">
         <!-- Bright -->
-        <input v-model="bright" type="range" min="0" max="100" step="5" :title="bright + ' %'">
+        <input v-model="bright" type="range" min="0" max="100" step="5" :title="bright + ' %'" />
         <!-- Color -->
-        <input v-model="color" type="color">
+        <input v-model="color" type="color" />
         <!-- Power -->
         <select v-model="power">
           <option value="ON">ON</option>
@@ -22,13 +22,11 @@
           <i class="material-icons clickable" @click="testLight()">play_circle_outline</i>
           <div v-if="loading || deleteLoading">Loading</div>
           <i v-else class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
-          <i
-            v-if="!deleteLoading"
-            class="material-icons clickable"
-            @click="confirm(`Delete ${name}?`) && delLight()"
-          >delete</i>
+          <i v-if="!deleteLoading" class="material-icons clickable" @click="confirm(`Delete ${name}?`) && delLight()"
+            >delete</i
+          >
         </div>
-        <p v-if="error || deleteError">An error occured: {{ error || deleteError}}</p>
+        <p v-if="error || deleteError">An error occured: {{ error || deleteError }}</p>
       </template>
     </ApolloMutation>
   </div>

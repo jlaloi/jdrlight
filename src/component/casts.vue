@@ -10,7 +10,7 @@
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
         <select v-model="selectedCast.deviceId" :disabled="loading || castsSorted.length === 0">
-          <option/>
+          <option />
           <option v-for="(l, index) in castsSorted" :key="index" :value="l">{{ l }}</option>
         </select>
         <button :disabled="!selectedCast.deviceId" @click="mutate()">Add cast to scene</button>

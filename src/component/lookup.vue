@@ -1,10 +1,5 @@
 <template>
-  <i
-    id="Lookup"
-    class="material-icons clickable"
-    :class="{'rotating': loading}"
-    @click="refresh()"
-  >refresh</i>
+  <i id="Lookup" class="material-icons clickable" :class="{rotating: loading}" @click="refresh()">refresh</i>
 </template>
 
 <script>

@@ -177,7 +177,7 @@ export const ALL_DASHBOARD = gql`
           power
           bright
           rgb
-        },
+        }
         casts {
           deviceId
           media
@@ -218,7 +218,7 @@ export const CREATE_CAST = gql`
 
 export const UPDATE_CAST = gql`
   mutation($id: ID!, $media: String) {
-    updateCast(id: $id, media: $media,) {
+    updateCast(id: $id, media: $media) {
       id
       deviceId
       media
