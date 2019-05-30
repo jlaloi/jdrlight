@@ -5,16 +5,16 @@
     <ApolloMutation :mutation="updateCast" :variables="{id: cast.id, media}" :update="update">
       <template slot-scope="{mutate, loading, error}">
         <!-- Media -->
-        <select v-model="image" @change="media = image; image = undefined">
-          <option/>
+        <select v-model="image" @change="imageSelected()">
+          <option />
           <option v-for="(l, index) in imagesSorted" :key="index" :value="serverUrl + l">{{ l }}</option>
         </select>
-        <input v-model="media" type="text" placeholder="url">
+        <input v-model="media" type="text" placeholder="url" />
         <!-- Actions -->
         <div class="actions">
           <!-- Preview -->
           <a v-if="media" :href="media" :title="media" target="_blank">
-            <img :src="media">
+            <img :src="media" />
           </a>
           <i class="material-icons clickable" @click="testCast()">play_circle_outline</i>
           <div v-if="loading || deleteLoading">Loading</div>
@@ -23,9 +23,10 @@
             v-if="!deleteLoading"
             class="material-icons clickable"
             @click="confirm(`Delete ${cast.deviceId}?`) && delCast()"
-          >delete</i>
+            >delete</i
+          >
         </div>
-        <p v-if="error || deleteError">An error occured: {{ error || deleteError}}</p>
+        <p v-if="error || deleteError">An error occured: {{ error || deleteError }}</p>
       </template>
     </ApolloMutation>
   </div>
@@ -123,6 +124,10 @@ export default {
     },
     reset() {
       this.media = this.cast.media;
+    },
+    imageSelected() {
+      this.media = this.image;
+      this.image = undefined;
     },
     confirm(msg) {
       return window.confirm(msg);
