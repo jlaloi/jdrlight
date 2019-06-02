@@ -1,7 +1,11 @@
 <template>
   <div id="Lookup">
-    <i class="material-icons clickable" :class="{rotating: loading}" @click="refreshMedia()">perm_media</i>
-    <i class="material-icons clickable" :class="{rotating: loading}" @click="refreshAll()">refresh</i>
+    <i class="material-icons clickable" :class="{rotating: loading}" title="Refresh light list" @click="refreshMedia()"
+      >perm_media</i
+    >
+    <i class="material-icons clickable" :class="{rotating: loading}" title="Refresh cast list" @click="refreshCast()"
+      >cast</i
+    >
   </div>
 </template>
 
@@ -16,20 +20,19 @@ export default {
     };
   },
   methods: {
-    async refreshAll() {
+    async refreshCast() {
       this.loading = true;
       await HTTP.get('/lookup');
       setTimeout(() => {
-        this.$store.dispatch('fetchLights');
-        this.$store.dispatch('fetchMusics');
         this.$store.dispatch('fetchCasts');
-        this.$store.dispatch('fetchImages');
         this.loading = false;
       }, 5000);
     },
     async refreshMedia() {
-      this.$store.dispatch('fetchMusics');
-      this.$store.dispatch('fetchImages');
+      this.loading = true;
+      Promise.all([this.$store.dispatch('fetchMusics'), this.$store.dispatch('fetchImages')]).finally(
+        () => (this.loading = false)
+      );
     }
   }
 };
