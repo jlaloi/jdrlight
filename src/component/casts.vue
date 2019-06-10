@@ -9,11 +9,14 @@
     >
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
-        <select v-model="selectedCast.deviceId" :disabled="loading || castsSorted.length === 0">
+        <select
+          v-model="selectedCast.deviceId"
+          :disabled="loading || castsSorted.length === 0"
+          @change="onChange(mutate)"
+        >
           <option />
           <option v-for="(l, index) in castsSorted" :key="index" :value="l">{{ l }}</option>
         </select>
-        <button :disabled="!selectedCast.deviceId" @click="mutate()">Add cast to scene</button>
         <p v-if="error">An error occured: {{ error }}</p>
       </template>
     </ApolloMutation>
@@ -47,6 +50,9 @@ export default {
   methods: {
     onDone() {
       this.selectedCast = {};
+    },
+    onChange(mutateFct) {
+      setTimeout(() => this.selectedCast.deviceId && mutateFct(), 100);
     },
     update(
       proxy,
