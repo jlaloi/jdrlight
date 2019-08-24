@@ -6,16 +6,14 @@ const Scanner = castv2.Scanner();
 const ScannerPromise = castv2.ScannerPromise();
 const MediaPlayer = castv2.MediaPlayer();
 
-const devices = [];
+const devices = new Map();
 
 /*
  * Lookup
  */
-export const initLookUpCast = () => new Scanner(device => devices.push(device), {scanInterval: 0});
+export const initLookUpCast = () => new Scanner(device => devices.set(device, undefined), {scanInterval: 0});
 
-export const getCasts = () => devices.map(c => c.name);
-
-export const getCast = deviceName => devices.find(l => l.name === deviceName);
+export const getCasts = () => [...devices.keys()].map(c => c.name);
 
 export const cast = async (deviceName, media, imgDir, serverHost) => {
   if (media === 'off') return castStop(deviceName);
@@ -35,7 +33,7 @@ export const cast = async (deviceName, media, imgDir, serverHost) => {
   console.log(`Cast ${JSON.stringify(media)} to ${deviceName}`);
   const onConnect = async (device, mediaPlayer, resolve) => {
     await mediaPlayer.playUrlPromise(media);
-    await mediaPlayer.close();
+    // await mediaPlayer.close();
     resolve(media);
   };
   return castUpdate(deviceName, onConnect);
@@ -44,7 +42,9 @@ export const cast = async (deviceName, media, imgDir, serverHost) => {
 export const castStop = async deviceName => {
   console.log(`Stop cast on ${deviceName}`);
   const onConnect = async (device, mediaPlayer, resolve) => {
+    await mediaPlayer.close();
     await mediaPlayer.stopClientPromise();
+    device.set(deviceName, undefined);
     resolve('off');
   };
   return castUpdate(deviceName, onConnect);
@@ -53,12 +53,19 @@ export const castStop = async deviceName => {
 const castUpdate = async (deviceName, onConnect) =>
   new Promise(async (resolve, reject) => {
     try {
-      const device = await ScannerPromise(deviceName);
-      if (!device)
+      if (!devices.has(deviceName))
         reject({
           result: `Cast device ${deviceName} not found`,
         });
-      else onConnect(device, new MediaPlayer(device), resolve, reject);
+      const device = await ScannerPromise(deviceName);
+      if (!device)
+        reject({
+          result: `Cast device ${deviceName} not connected`,
+        });
+      else {
+        if (!devices.get(deviceName)) devices.set(deviceName, new MediaPlayer(device));
+        onConnect(device, devices.get(deviceName), resolve, reject);
+      }
     } catch (err) {
       console.error(err);
       reject({
