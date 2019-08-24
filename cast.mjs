@@ -18,6 +18,7 @@ export const getCasts = () => devices.map(c => c.name);
 export const getCast = deviceName => devices.find(l => l.name === deviceName);
 
 export const cast = async (deviceName, media, imgDir, serverHost) => {
+  if (media === 'off') return castStop(deviceName);
   if (imgDir && serverHost) {
     // Download local copie
     const fileName = media.substr(media.lastIndexOf('/') + 1);
@@ -40,9 +41,13 @@ export const cast = async (deviceName, media, imgDir, serverHost) => {
   return castUpdate(deviceName, onConnect);
 };
 
-export const castStop = deviceName => {
+export const castStop = async deviceName => {
   console.log(`Stop cast on ${deviceName}`);
-  return castUpdate(deviceName, (device, mediaPlayer) => mediaPlayer.stopClientPromise());
+  const onConnect = async (device, mediaPlayer, resolve) => {
+    await mediaPlayer.stopClientPromise();
+    resolve('off');
+  };
+  return castUpdate(deviceName, onConnect);
 };
 
 const castUpdate = async (deviceName, onConnect) =>
