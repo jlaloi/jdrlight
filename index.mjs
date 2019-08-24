@@ -4,7 +4,7 @@ import compression from 'compression';
 
 import fs from 'fs';
 import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light';
-import {getCasts, castImage, castStop, initLookUpCast} from './cast';
+import {getCasts, cast, castStop, initLookUpCast} from './cast';
 
 const PORT = 9090;
 const DIR_PUBLIC = 'public/';
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.get('/lookup', (req, res) => {
   initLookup();
   res.json({
-    result: 'ok'
+    result: 'ok',
   });
 });
 
@@ -37,7 +37,7 @@ app.post('/light/:deviceId', async (req, res) => {
     if (scene.rgb) await setRGB(req.params.deviceId, scene.rgb);
     if (scene.bright) await setBright(req.params.deviceId, Number(scene.bright));
     res.json({
-      result: 'ok'
+      result: 'ok',
     });
   } catch (error) {
     console.log(error);
@@ -49,15 +49,12 @@ app.get('/cast', (req, res) => res.json(getCasts()));
 app.post('/cast/:deviceId', async (req, res) => {
   try {
     res.json(
-      await castImage(
+      await cast(
         req.params.deviceId,
-        {
-          url: req.body.media,
-          contentType: req.body.contentType || 'image/jpeg'
-        },
+        req.body.media,
         DIR_PUBLIC + DIR_IMG,
-        (req.headers.referer || (req.headers.host + '/'))  + DIR_IMG
-      )
+        (req.headers.referer || req.headers.host + '/') + DIR_IMG,
+      ),
     );
   } catch (error) {
     console.log(error);
@@ -77,11 +74,11 @@ app.delete('/cast/:deviceId', async (req, res) => {
 app.use(Express.static(DIR_PUBLIC));
 app.use('/fonts', Express.static(DIR_FONTS));
 app.get('/musics', (req, res) =>
-  fs.readdir(DIR_PUBLIC + DIR_MUSIC, (err, files) => res.json(files.map(f => DIR_MUSIC + f)))
+  fs.readdir(DIR_PUBLIC + DIR_MUSIC, (err, files) => res.json(files.map(f => DIR_MUSIC + f))),
 );
 
 app.get('/images', (req, res) =>
-  fs.readdir(DIR_PUBLIC + DIR_IMG, (err, files) => res.json(files.map(f => DIR_IMG + f)))
+  fs.readdir(DIR_PUBLIC + DIR_IMG, (err, files) => res.json(files.map(f => DIR_IMG + f))),
 );
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));

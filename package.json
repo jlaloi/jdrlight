@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "parcel watch ./src/index.html --out-dir ./public",
     "prod": "parcel build ./src/index.html --out-dir ./public",
-    "jdr": "node --experimental-modules index.mjs",
+    "start": "node --experimental-modules index.mjs",
     "lint": "eslint --ext .js,.vue --fix src",
     "lintB": "eslint  --fix ./*.mjs"
   },
@@ -15,16 +15,16 @@
   "dependencies": {
     "apollo-boost": "^0.3.1",
     "body-parser": "^1.19.0",
-    "chromecast-js": "github:guerrerocarlos/chromecast-js#pull/28/head",
+    "castv2-player": "^2.0.5",
     "compression": "^1.7.4",
     "express": "^4.17.1",
-    "graphql": "^14.3.1",
+    "graphql": "^14.5.3",
     "material-design-icons": "^3.0.1",
     "node-yeelight-wifi": "^0.1.2",
     "request": "^2.88.0",
     "vue": "^2.6.10",
-    "vue-apollo": "^3.0.0-beta.30",
-    "vue-router": "^3.0.6",
+    "vue-apollo": "^3.0.0-rc.2",
+    "vue-router": "^3.1.2",
     "vuex": "^3.1.1",
     "youtube-player": "^5.5.2"
   },
@@ -35,9 +35,9 @@
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.3.0",
-    "eslint-plugin-vue": "^5.2.2",
+    "eslint-plugin-vue": "^5.2.3",
     "parcel-bundler": "^1.12.3",
-    "sass": "^1.20.1",
+    "sass": "^1.22.10",
     "vue-hot-reload-api": "^2.3.3",
     "vue-resource": "^1.5.1",
     "vue-template-compiler": "^2.6.10"

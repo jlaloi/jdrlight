@@ -25,35 +25,35 @@ import scenes from './scenes';
 export default {
   name: 'Scenario',
   components: {
-    scenes
+    scenes,
   },
   data() {
     return {
       toggleChangeName: false,
       name: undefined,
-      updateScenario: UPDATE_SCENARIO
+      updateScenario: UPDATE_SCENARIO,
     };
   },
   computed: {
     id() {
       return this.$route.params.id;
-    }
+    },
   },
   methods: {
     onDone() {
       this.toggleChangeName = !this.toggleChangeName;
-    }
+    },
   },
   apollo: {
     Scenario: {
       query: GET_SCENARIO,
       variables() {
         return {
-          id: this.id
+          id: this.id,
         };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 

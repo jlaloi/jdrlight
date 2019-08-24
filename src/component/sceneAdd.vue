@@ -18,7 +18,7 @@ export default {
       loading: false,
       name: undefined,
       error: undefined,
-      addScene: CREATE_SCENE
+      addScene: CREATE_SCENE,
     };
   },
   methods: {
@@ -30,32 +30,32 @@ export default {
           mutation: CREATE_SCENE,
           variables: {
             name: this.name,
-            scenarioId: this.scenarioId
+            scenarioId: this.scenarioId,
           },
           update(
             proxy,
             {
-              data: {createScene}
-            }
+              data: {createScene},
+            },
           ) {
             const query = {
               query: GET_SCENES,
               variables: {
-                scenario: createScene.scenario.id
-              }
+                scenario: createScene.scenario.id,
+              },
             };
             const data = proxy.readQuery(query);
             data.allScenes.push(createScene);
             proxy.writeQuery({...query, data});
-          }
+          },
         })
         .catch(error => (this.error = error))
         .then(() => {
           this.loading = false;
           this.name = undefined;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

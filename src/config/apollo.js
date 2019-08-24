@@ -5,9 +5,9 @@ import VueApollo from 'vue-apollo';
 Vue.use(VueApollo);
 
 const apolloClient = new ApolloClient({
-  uri: ''
+  uri: '',
 });
 
 export const apolloProvider = new VueApollo({
-  defaultClient: apolloClient
+  defaultClient: apolloClient,
 });

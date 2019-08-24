@@ -52,18 +52,18 @@ export default {
       query: {
         query: GET_CASTS,
         variables: {
-          sceneId: this.cast.scene.id
-        }
+          sceneId: this.cast.scene.id,
+        },
       },
       deleteLoading: false,
       deleteError: undefined,
-      testLoading: false
+      testLoading: false,
     };
   },
   computed: {
     getConfig() {
       return {
-        media: this.media
+        media: this.media,
       };
     },
     unsaved() {
@@ -71,7 +71,7 @@ export default {
     },
     imagesSorted() {
       return this.$store.state.images.slice(0).sort();
-    }
+    },
   },
   mounted() {
     this.reset();
@@ -80,9 +80,9 @@ export default {
     async testCast() {
       this.testLoading = true;
       try {
-        const media = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body;
-        if (media.url !== this.media) {
-          this.media = media.url;
+        const mediaCasted = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body;
+        if (mediaCasted !== this.media) {
+          this.media = mediaCasted;
           this.$store.dispatch('fetchImages');
         }
       } catch (error) {
@@ -93,8 +93,8 @@ export default {
     update(
       proxy,
       {
-        data: {updateCast}
-      }
+        data: {updateCast},
+      },
     ) {
       const data = proxy.readQuery(this.query);
       const castIndex = data.allCasts.findIndex(l => l.id == this.cast.id);
@@ -104,15 +104,15 @@ export default {
     updateDelete(
       proxy,
       {
-        data: {deleteCast}
-      }
+        data: {deleteCast},
+      },
     ) {
       const data = proxy.readQuery(this.query);
       proxy.writeQuery({
         ...this.query,
         data: {
-          allCasts: data.allCasts.filter(s => s.id !== deleteCast.id)
-        }
+          allCasts: data.allCasts.filter(s => s.id !== deleteCast.id),
+        },
       });
     },
     delCast() {
@@ -122,9 +122,9 @@ export default {
         .mutate({
           mutation: DELETE_CAST,
           variables: {
-            id: this.cast.id
+            id: this.cast.id,
           },
-          update: this.updateDelete
+          update: this.updateDelete,
         })
         .catch(error => (this.deleteError = error))
         .then(() => {
@@ -140,8 +140,8 @@ export default {
     },
     confirm(msg) {
       return window.confirm(msg);
-    }
-  }
+    },
+  },
 };
 </script>
 

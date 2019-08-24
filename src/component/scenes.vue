@@ -15,12 +15,12 @@ export default {
   name: 'Scenes',
   components: {
     scene,
-    sceneAdd
+    sceneAdd,
   },
   props: ['scenarioId'],
   data() {
     return {
-      allScenes: []
+      allScenes: [],
     };
   },
   apollo: {
@@ -28,16 +28,16 @@ export default {
       query: GET_SCENES,
       variables() {
         return {
-          scenario: this.scenarioId
+          scenario: this.scenarioId,
         };
-      }
-    }
+      },
+    },
   },
   created() {
     this.$store.dispatch('fetchLights');
     this.$store.dispatch('fetchMusics');
     this.$store.dispatch('fetchCasts');
     this.$store.dispatch('fetchImages');
-  }
+  },
 };
 </script>

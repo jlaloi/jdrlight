@@ -37,7 +37,7 @@ export default {
       name: undefined,
       allScenarios: [],
       createScenario: CREATE_SCENARIO,
-      deleteScenario: DELETE_SCENARIO
+      deleteScenario: DELETE_SCENARIO,
     };
   },
   methods: {
@@ -50,8 +50,8 @@ export default {
     updateCreate(
       proxy,
       {
-        data: {createScenario}
-      }
+        data: {createScenario},
+      },
     ) {
       const data = proxy.readQuery({query: ALL_SCENARIOS});
       data.allScenarios.push(createScenario);
@@ -60,24 +60,24 @@ export default {
     updateDelete(
       store,
       {
-        data: {deleteScenario}
-      }
+        data: {deleteScenario},
+      },
     ) {
       const query = {query: ALL_SCENARIOS};
       const {allScenarios} = store.readQuery({query: ALL_SCENARIOS});
       store.writeQuery({
         ...query,
         data: {
-          allScenarios: allScenarios.filter(s => s.id !== deleteScenario.id)
-        }
+          allScenarios: allScenarios.filter(s => s.id !== deleteScenario.id),
+        },
       });
-    }
+    },
   },
   apollo: {
     allScenarios: {
-      query: ALL_SCENARIOS
-    }
-  }
+      query: ALL_SCENARIOS,
+    },
+  },
 };
 </script>
 

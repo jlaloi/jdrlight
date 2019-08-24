@@ -10,7 +10,7 @@ export const store = new Vuex.Store({
     lights: [],
     musics: [],
     casts: [],
-    images: []
+    images: [],
   },
   mutations: {
     setLights(state, payload) {
@@ -24,32 +24,32 @@ export const store = new Vuex.Store({
     },
     setImages(state, payload) {
       state.images = payload.images;
-    }
+    },
   },
   actions: {
     async fetchLights(context) {
       const lights = (await HTTP.get('/light')).body;
       context.commit('setLights', {
-        lights
+        lights,
       });
     },
     async fetchMusics(context) {
       const musics = (await HTTP.get('/musics')).body;
       context.commit('setMusics', {
-        musics
+        musics,
       });
     },
     async fetchCasts(context) {
       const casts = (await HTTP.get('/cast')).body;
       context.commit('setCasts', {
-        casts
+        casts,
       });
     },
     async fetchImages(context) {
       const images = (await HTTP.get('/images')).body;
       context.commit('setImages', {
-        images
+        images,
       });
-    }
-  }
+    },
+  },
 });

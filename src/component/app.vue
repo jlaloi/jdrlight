@@ -17,12 +17,12 @@ import lookup from './lookup';
 export default {
   name: 'App',
   components: {
-    lookup
+    lookup,
   },
   computed: {
     routes() {
       return routes.filter(r => !r.name);
-    }
-  }
+    },
+  },
 };
 </script>

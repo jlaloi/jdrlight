@@ -49,11 +49,11 @@ export default {
       query: {
         query: GET_LIGHTS,
         variables: {
-          sceneId: this.light.scene.id
-        }
+          sceneId: this.light.scene.id,
+        },
       },
       deleteLoading: false,
-      deleteError: undefined
+      deleteError: undefined,
     };
   },
   computed: {
@@ -71,7 +71,7 @@ export default {
       return {
         power: this.power,
         bright: this.bright,
-        rgb: this.rgb
+        rgb: this.rgb,
       };
     },
     unsaved() {
@@ -80,7 +80,7 @@ export default {
         this.bright != this.light.bright ||
         this.color !== this.rgbToHex(this.light.rgb)
       );
-    }
+    },
   },
   mounted() {
     this.reset();
@@ -92,8 +92,8 @@ export default {
     update(
       proxy,
       {
-        data: {updateLight}
-      }
+        data: {updateLight},
+      },
     ) {
       const data = proxy.readQuery(this.query);
       const lightIndex = data.allLights.findIndex(l => l.id == this.light.id);
@@ -103,15 +103,15 @@ export default {
     updateDelete(
       proxy,
       {
-        data: {deleteLight}
-      }
+        data: {deleteLight},
+      },
     ) {
       const data = proxy.readQuery(this.query);
       proxy.writeQuery({
         ...this.query,
         data: {
-          allLights: data.allLights.filter(s => s.id !== deleteLight.id)
-        }
+          allLights: data.allLights.filter(s => s.id !== deleteLight.id),
+        },
       });
     },
     delLight() {
@@ -121,9 +121,9 @@ export default {
         .mutate({
           mutation: DELETE_LIGHT,
           variables: {
-            id: this.light.id
+            id: this.light.id,
           },
-          update: this.updateDelete
+          update: this.updateDelete,
         })
         .catch(error => (this.deleteError = error))
         .then(() => {
@@ -139,8 +139,8 @@ export default {
     },
     confirm(msg) {
       return window.confirm(msg);
-    }
-  }
+    },
+  },
 };
 </script>
 

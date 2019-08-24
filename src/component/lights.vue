@@ -28,20 +28,20 @@ import light from './light';
 export default {
   name: 'Lights',
   components: {
-    light
+    light,
   },
   props: ['sceneId'],
   data() {
     return {
       allLights: [],
       selectedLight: {},
-      createLight: CREATE_LIGHT
+      createLight: CREATE_LIGHT,
     };
   },
   computed: {
     lightsSorted() {
       return this.$store.state.lights.filter(l => !this.allLights.find(sl => sl.deviceId === l.deviceId)).sort();
-    }
+    },
   },
   methods: {
     onDone() {
@@ -53,30 +53,30 @@ export default {
     update(
       proxy,
       {
-        data: {createLight}
-      }
+        data: {createLight},
+      },
     ) {
       const query = {
         query: GET_LIGHTS,
         variables: {
-          sceneId: createLight.scene.id
-        }
+          sceneId: createLight.scene.id,
+        },
       };
       const data = proxy.readQuery(query);
       data.allLights.push(createLight);
       proxy.writeQuery({...query, data});
-    }
+    },
   },
   apollo: {
     allLights: {
       query: GET_LIGHTS,
       variables() {
         return {
-          sceneId: this.sceneId
+          sceneId: this.sceneId,
         };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

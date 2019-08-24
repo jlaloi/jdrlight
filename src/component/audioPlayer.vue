@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       audioPlayer: undefined,
-      youTubePlayer: undefined
+      youTubePlayer: undefined,
     };
   },
   computed: {
@@ -31,12 +31,12 @@ export default {
         height: '192',
         width: '312',
         autoplay: 0,
-        loop: 1
+        loop: 1,
       };
     },
     isAudioFile() {
       return this.isFile(this.music);
-    }
+    },
   },
   watch: {
     music(newMusic, oldMusic) {
@@ -49,7 +49,7 @@ export default {
         if (!oldMusic || this.isAudioFile !== this.isFile(oldMusic)) this.initPlayer();
         else this.playMusic();
       });
-    }
+    },
   },
   mounted() {
     this.initPlayer();
@@ -90,8 +90,8 @@ export default {
     },
     playing() {
       if (this.onPlaying) this.onPlaying();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

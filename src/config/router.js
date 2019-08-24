@@ -13,12 +13,13 @@ export const routes = [
     title: 'Scenario',
     path: '/scenario/:id',
     name: 'scenario',
-    component: Scenario
-  }
+    component: Scenario,
+  },
 ];
 
 export const router = new VueRouter({
-  routes
+  routes,
 });
 
-export const serverUrl = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + '/';
+export const serverUrl =
+  location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + '/';

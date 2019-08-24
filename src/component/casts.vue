@@ -32,20 +32,20 @@ import cast from './cast';
 export default {
   name: 'Casts',
   components: {
-    cast
+    cast,
   },
   props: ['sceneId'],
   data() {
     return {
       allCasts: [],
       selectedCast: {},
-      createCast: CREATE_CAST
+      createCast: CREATE_CAST,
     };
   },
   computed: {
     castsSorted() {
       return this.$store.state.casts.filter(l => !this.allCasts.find(sl => sl.deviceId === l)).sort();
-    }
+    },
   },
   methods: {
     onDone() {
@@ -57,30 +57,30 @@ export default {
     update(
       proxy,
       {
-        data: {createCast}
-      }
+        data: {createCast},
+      },
     ) {
       const query = {
         query: GET_CASTS,
         variables: {
-          sceneId: createCast.scene.id
-        }
+          sceneId: createCast.scene.id,
+        },
       };
       const data = proxy.readQuery(query);
       data.allCasts.push(createCast);
       proxy.writeQuery({...query, data});
-    }
+    },
   },
   apollo: {
     allCasts: {
       query: GET_CASTS,
       variables() {
         return {
-          sceneId: this.sceneId
+          sceneId: this.sceneId,
         };
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

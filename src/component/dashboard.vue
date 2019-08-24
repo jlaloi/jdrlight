@@ -23,14 +23,14 @@ import audioPlayer from './audioPlayer';
 export default {
   name: 'Dashboard',
   components: {
-    audioPlayer
+    audioPlayer,
   },
   data() {
     return {
       allScenarios: [],
       scenario: undefined,
       music: undefined,
-      scene: {}
+      scene: {},
     };
   },
   methods: {
@@ -49,14 +49,14 @@ export default {
     },
     onMusicPlaying() {
       this.updateLight();
-    }
+    },
   },
   apollo: {
     allScenarios: {
       query: ALL_DASHBOARD,
-      fetchPolicy: 'network-only'
-    }
-  }
+      fetchPolicy: 'network-only',
+    },
+  },
 };
 </script>
 

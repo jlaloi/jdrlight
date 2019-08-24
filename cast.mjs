@@ -1,74 +1,66 @@
-import chromecastjs from 'chromecast-js';
+import {default as castv2} from 'castv2-player';
 import fs from 'fs';
 import request from 'request';
 
-let browser;
+const Scanner = castv2.Scanner();
+const ScannerPromise = castv2.ScannerPromise();
+const MediaPlayer = castv2.MediaPlayer();
 
 const devices = [];
 
-export const initLookUpCast = () => {
-  browser = new chromecastjs.Browser();
-  browser.on('deviceOn', device => {
-    if (!getCast(device.config.name)) {
-      console.log(`Cast device detected : ${device.config.name}`);
-      devices.push(device);
-    }
-  });
-};
+/*
+ * Lookup
+ */
+export const initLookUpCast = () => new Scanner(device => devices.push(device), {scanInterval: 0});
 
-const castUpdate = (deviceId, onConnect) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const device = getCast(deviceId);
-      if (!device)
-        reject({
-          result: `Cast device ${deviceId} not found`
-        });
-      else {
-        if (!device.client) {
-          device.connect();
-          device.on('connected', () => {
-            const castIndex = devices.findIndex(l => l.config.name == device.config.name);
-            devices[castIndex] = device;
-            onConnect(device, resolve, reject);
-          });
-        } else onConnect(device, resolve, reject);
-      }
-    } catch (err) {
-      console.error(err);
-      reject({
-        result: err
-      });
-    }
-  });
+export const getCasts = () => devices.map(c => c.name);
 
-export const getCasts = () => devices.map(c => c.config.name);
+export const getCast = deviceName => devices.find(l => l.name === deviceName);
 
-export const getCast = deviceId => devices.find(l => l.config.name === deviceId);
-
-export const castImage = async (deviceId, media, imgDir, serverHost) => {
+export const cast = async (deviceName, media, imgDir, serverHost) => {
   if (imgDir && serverHost) {
     // Download local copie
-    const fileName = media.url.substr(media.url.lastIndexOf('/') + 1);
+    const fileName = media.substr(media.lastIndexOf('/') + 1);
     const filePath = imgDir + fileName;
-    if (!fs.existsSync(filePath)) {
+    if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(fileName) && !fs.existsSync(filePath)) {
       try {
-        await download(media.url, filePath);
-        media.url = serverHost + fileName;
+        await download(media, filePath);
+        media = serverHost + fileName;
       } catch (error) {
         console.error(error);
       }
     }
   }
-  console.log(`Cast image ${JSON.stringify(media)} to ${deviceId}`);
-  const onConnect = (device, resolve) => device.play(media, 60, () => resolve(media));
-  return castUpdate(deviceId, onConnect);
+  console.log(`Cast ${JSON.stringify(media)} to ${deviceName}`);
+  const onConnect = async (device, mediaPlayer, resolve) => {
+    await mediaPlayer.playUrlPromise(media);
+    await mediaPlayer.close();
+    resolve(media);
+  };
+  return castUpdate(deviceName, onConnect);
 };
 
-export const castStop = deviceId => {
-  console.log(`Stop cast on ${deviceId}`);
-  castUpdate(deviceId, (device, resolve) => device.close(resolve));
+export const castStop = deviceName => {
+  console.log(`Stop cast on ${deviceName}`);
+  return castUpdate(deviceName, (device, mediaPlayer) => mediaPlayer.stopClientPromise());
 };
+
+const castUpdate = async (deviceName, onConnect) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const device = await ScannerPromise(deviceName);
+      if (!device)
+        reject({
+          result: `Cast device ${deviceName} not found`,
+        });
+      else onConnect(device, new MediaPlayer(device), resolve, reject);
+    } catch (err) {
+      console.error(err);
+      reject({
+        result: err,
+      });
+    }
+  });
 
 export const download = (url, target) =>
   new Promise((resolve, reject) => {

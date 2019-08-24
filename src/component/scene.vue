@@ -46,7 +46,7 @@ export default {
   components: {
     audioPlayer,
     lights,
-    casts
+    casts,
   },
   props: ['scene'],
   data() {
@@ -55,7 +55,7 @@ export default {
       name: undefined,
       music: undefined,
       deleteLoading: false,
-      deleteError: undefined
+      deleteError: undefined,
     };
   },
   computed: {
@@ -67,7 +67,7 @@ export default {
     },
     unsaved() {
       return this.name !== this.scene.name || this.music != this.scene.music;
-    }
+    },
   },
   mounted() {
     this.reset();
@@ -79,14 +79,14 @@ export default {
     update(
       proxy,
       {
-        data: {updateScene}
-      }
+        data: {updateScene},
+      },
     ) {
       const query = {
         query: GET_SCENES,
         variables: {
-          scenario: updateScene.scenario.id
-        }
+          scenario: updateScene.scenario.id,
+        },
       };
       const data = proxy.readQuery(query);
       const sceneIndex = data.allScenes.findIndex(s => s.id === this.scene.id);
@@ -96,21 +96,21 @@ export default {
     updateDelete(
       store,
       {
-        data: {deleteScene}
-      }
+        data: {deleteScene},
+      },
     ) {
       const query = {
         query: GET_SCENES,
         variables: {
-          scenario: this.scene.scenario.id
-        }
+          scenario: this.scene.scenario.id,
+        },
       };
       const {allScenes} = store.readQuery(query);
       store.writeQuery({
         ...query,
         data: {
-          allScenes: allScenes.filter(s => s.id !== deleteScene.id)
-        }
+          allScenes: allScenes.filter(s => s.id !== deleteScene.id),
+        },
       });
     },
     delScene() {
@@ -120,9 +120,9 @@ export default {
         .mutate({
           mutation: DELETE_SCENE,
           variables: {
-            id: this.scene.id
+            id: this.scene.id,
           },
-          update: this.updateDelete
+          update: this.updateDelete,
         })
         .catch(error => (this.deleteError = error))
         .then(() => {
@@ -131,8 +131,8 @@ export default {
     },
     confirm(msg) {
       return window.confirm(msg);
-    }
-  }
+    },
+  },
 };
 </script>
 
