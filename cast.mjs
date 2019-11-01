@@ -1,54 +1,54 @@
-import {default as castv2} from 'castv2-player';
-import fs from 'fs';
-import request from 'request';
+import {default as castv2} from 'castv2-player'
+import fs from 'fs'
+import request from 'request'
 
-const Scanner = castv2.Scanner();
-const ScannerPromise = castv2.ScannerPromise();
-const MediaPlayer = castv2.MediaPlayer();
+const Scanner = castv2.Scanner()
+const ScannerPromise = castv2.ScannerPromise()
+const MediaPlayer = castv2.MediaPlayer()
 
-const devices = new Map();
+const devices = new Map()
 
 /*
  * Lookup
  */
-export const initLookUpCast = () => new Scanner(device => devices.set(device, undefined), {scanInterval: 0});
+export const initLookUpCast = () => new Scanner(device => devices.set(device, undefined), {scanInterval: 0})
 
-export const getCasts = () => [...devices.keys()].map(c => c.name);
+export const getCasts = () => [...devices.keys()].map(c => c.name)
 
 export const cast = async (deviceName, media, imgDir, serverHost) => {
-  if (media === 'off') return castStop(deviceName);
+  if (media === 'off') return castStop(deviceName)
   if (imgDir && serverHost) {
     // Download local copie
-    const fileName = media.substr(media.lastIndexOf('/') + 1);
-    const filePath = imgDir + fileName;
+    const fileName = media.substr(media.lastIndexOf('/') + 1)
+    const filePath = imgDir + fileName
     if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(fileName) && !fs.existsSync(filePath)) {
       try {
-        await download(media, filePath);
-        media = serverHost + fileName;
+        await download(media, filePath)
+        media = serverHost + fileName
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     }
   }
-  console.log(`Cast ${JSON.stringify(media)} to ${deviceName}`);
+  console.log(`Cast ${JSON.stringify(media)} to ${deviceName}`)
   const onConnect = async (device, mediaPlayer, resolve) => {
-    await mediaPlayer.playUrlPromise(media);
+    await mediaPlayer.playUrlPromise(media)
     // await mediaPlayer.close();
-    resolve(media);
-  };
-  return castUpdate(deviceName, onConnect);
-};
+    resolve(media)
+  }
+  return castUpdate(deviceName, onConnect)
+}
 
 export const castStop = async deviceName => {
-  console.log(`Stop cast on ${deviceName}`);
+  console.log(`Stop cast on ${deviceName}`)
   const onConnect = async (device, mediaPlayer, resolve) => {
-    await mediaPlayer.close();
-    await mediaPlayer.stopClientPromise();
-    device.set(deviceName, undefined);
-    resolve('off');
-  };
-  return castUpdate(deviceName, onConnect);
-};
+    await mediaPlayer.close()
+    await mediaPlayer.stopClientPromise()
+    device.set(deviceName, undefined)
+    resolve('off')
+  }
+  return castUpdate(deviceName, onConnect)
+}
 
 const castUpdate = async (deviceName, onConnect) =>
   new Promise(async (resolve, reject) => {
@@ -56,29 +56,29 @@ const castUpdate = async (deviceName, onConnect) =>
       if (!devices.has(deviceName))
         reject({
           result: `Cast device ${deviceName} not found`,
-        });
-      const device = await ScannerPromise(deviceName);
+        })
+      const device = await ScannerPromise(deviceName)
       if (!device)
         reject({
           result: `Cast device ${deviceName} not connected`,
-        });
+        })
       else {
-        if (!devices.get(deviceName)) devices.set(deviceName, new MediaPlayer(device));
-        onConnect(device, devices.get(deviceName), resolve, reject);
+        if (!devices.get(deviceName)) devices.set(deviceName, new MediaPlayer(device))
+        onConnect(device, devices.get(deviceName), resolve, reject)
       }
     } catch (err) {
-      console.error(err);
+      console.error(err)
       reject({
         result: err,
-      });
+      })
     }
-  });
+  })
 
 export const download = (url, target) =>
   new Promise((resolve, reject) => {
-    console.log(`Downloading ${url} to ${target}`);
+    console.log(`Downloading ${url} to ${target}`)
     request(url)
       .pipe(fs.createWriteStream(target))
       .on('error', error => reject(error))
-      .on('close', () => resolve(target));
-  });
+      .on('close', () => resolve(target))
+  })

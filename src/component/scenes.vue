@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import scene from './scene';
-import sceneAdd from './sceneAdd';
-import {GET_SCENES} from '../config/graph.js';
+import scene from './scene'
+import sceneAdd from './sceneAdd'
+import {GET_SCENES} from '../config/graph.js'
 
 export default {
   name: 'Scenes',
@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       allScenes: [],
-    };
+    }
   },
   apollo: {
     allScenes: {
@@ -29,15 +29,15 @@ export default {
       variables() {
         return {
           scenario: this.scenarioId,
-        };
+        }
       },
     },
   },
   created() {
-    this.$store.dispatch('fetchLights');
-    this.$store.dispatch('fetchMusics');
-    this.$store.dispatch('fetchCasts');
-    this.$store.dispatch('fetchImages');
+    this.$store.dispatch('fetchLights')
+    this.$store.dispatch('fetchMusics')
+    this.$store.dispatch('fetchCasts')
+    this.$store.dispatch('fetchImages')
   },
-};
+}
 </script>

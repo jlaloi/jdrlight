@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import audioPlayer from './audioPlayer';
-import lights from './lights';
-import casts from './casts';
-import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES} from '../config/graph';
+import audioPlayer from './audioPlayer'
+import lights from './lights'
+import casts from './casts'
+import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES} from '../config/graph'
 
 export default {
   name: 'Scene',
@@ -56,25 +56,25 @@ export default {
       music: undefined,
       deleteLoading: false,
       deleteError: undefined,
-    };
+    }
   },
   computed: {
     lightsSorted() {
-      return this.$store.state.lights.slice(0).sort();
+      return this.$store.state.lights.slice(0).sort()
     },
     sceneLights() {
-      return this.scene.lights.slice(0).sort((a, b) => a.deviceId - b.deviceId);
+      return this.scene.lights.slice(0).sort((a, b) => a.deviceId - b.deviceId)
     },
     unsaved() {
-      return this.name !== this.scene.name || this.music != this.scene.music;
+      return this.name !== this.scene.name || this.music != this.scene.music
     },
   },
   mounted() {
-    this.reset();
+    this.reset()
   },
   methods: {
     reset() {
-      ({name: this.name, music: this.music} = this.scene);
+      ;({name: this.name, music: this.music} = this.scene)
     },
     update(
       proxy,
@@ -87,11 +87,11 @@ export default {
         variables: {
           scenario: updateScene.scenario.id,
         },
-      };
-      const data = proxy.readQuery(query);
-      const sceneIndex = data.allScenes.findIndex(s => s.id === this.scene.id);
-      data.allScenes[sceneIndex] = updateScene;
-      proxy.writeQuery({...query, data});
+      }
+      const data = proxy.readQuery(query)
+      const sceneIndex = data.allScenes.findIndex(s => s.id === this.scene.id)
+      data.allScenes[sceneIndex] = updateScene
+      proxy.writeQuery({...query, data})
     },
     updateDelete(
       store,
@@ -104,18 +104,18 @@ export default {
         variables: {
           scenario: this.scene.scenario.id,
         },
-      };
-      const {allScenes} = store.readQuery(query);
+      }
+      const {allScenes} = store.readQuery(query)
       store.writeQuery({
         ...query,
         data: {
           allScenes: allScenes.filter(s => s.id !== deleteScene.id),
         },
-      });
+      })
     },
     delScene() {
-      this.deleteLoading = true;
-      this.deleteError = undefined;
+      this.deleteLoading = true
+      this.deleteError = undefined
       this.$apollo
         .mutate({
           mutation: DELETE_SCENE,
@@ -126,14 +126,14 @@ export default {
         })
         .catch(error => (this.deleteError = error))
         .then(() => {
-          this.deleteLoading = false;
-        });
+          this.deleteLoading = false
+        })
     },
     confirm(msg) {
-      return window.confirm(msg);
+      return window.confirm(msg)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

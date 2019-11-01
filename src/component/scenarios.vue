@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {ALL_SCENARIOS, CREATE_SCENARIO, DELETE_SCENARIO} from '../config/graph.js';
+import {ALL_SCENARIOS, CREATE_SCENARIO, DELETE_SCENARIO} from '../config/graph.js'
 
 export default {
   name: 'Scenarios',
@@ -38,14 +38,14 @@ export default {
       allScenarios: [],
       createScenario: CREATE_SCENARIO,
       deleteScenario: DELETE_SCENARIO,
-    };
+    }
   },
   methods: {
     confirm(msg) {
-      return window.confirm(msg);
+      return window.confirm(msg)
     },
     onDone() {
-      this.name = undefined;
+      this.name = undefined
     },
     updateCreate(
       proxy,
@@ -53,9 +53,9 @@ export default {
         data: {createScenario},
       },
     ) {
-      const data = proxy.readQuery({query: ALL_SCENARIOS});
-      data.allScenarios.push(createScenario);
-      proxy.writeQuery({query: ALL_SCENARIOS, data});
+      const data = proxy.readQuery({query: ALL_SCENARIOS})
+      data.allScenarios.push(createScenario)
+      proxy.writeQuery({query: ALL_SCENARIOS, data})
     },
     updateDelete(
       store,
@@ -63,14 +63,14 @@ export default {
         data: {deleteScenario},
       },
     ) {
-      const query = {query: ALL_SCENARIOS};
-      const {allScenarios} = store.readQuery({query: ALL_SCENARIOS});
+      const query = {query: ALL_SCENARIOS}
+      const {allScenarios} = store.readQuery({query: ALL_SCENARIOS})
       store.writeQuery({
         ...query,
         data: {
           allScenarios: allScenarios.filter(s => s.id !== deleteScenario.id),
         },
-      });
+      })
     },
   },
   apollo: {
@@ -78,7 +78,7 @@ export default {
       query: ALL_SCENARIOS,
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import HTTP from '../config/http';
-import {DELETE_LIGHT, UPDATE_LIGHT, GET_LIGHTS} from '../config/graph.js';
+import HTTP from '../config/http'
+import {DELETE_LIGHT, UPDATE_LIGHT, GET_LIGHTS} from '../config/graph.js'
 
 export default {
   name: 'Light',
@@ -54,40 +54,40 @@ export default {
       },
       deleteLoading: false,
       deleteError: undefined,
-    };
+    }
   },
   computed: {
     rgb() {
-      if (this.color) return this.color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16));
-      else return undefined;
+      if (this.color) return this.color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16))
+      else return undefined
     },
     device() {
-      return this.$store.state.lights.find(l => l.deviceId == this.light.deviceId) || {};
+      return this.$store.state.lights.find(l => l.deviceId == this.light.deviceId) || {}
     },
     name() {
-      return this.device.name || this.light.deviceId;
+      return this.device.name || this.light.deviceId
     },
     getConfig() {
       return {
         power: this.power,
         bright: this.bright,
         rgb: this.rgb,
-      };
+      }
     },
     unsaved() {
       return (
         this.power !== this.light.power ||
         this.bright != this.light.bright ||
         this.color !== this.rgbToHex(this.light.rgb)
-      );
+      )
     },
   },
   mounted() {
-    this.reset();
+    this.reset()
   },
   methods: {
     async testLight() {
-      await HTTP.post(`/light/${this.light.deviceId}`, this.getConfig);
+      await HTTP.post(`/light/${this.light.deviceId}`, this.getConfig)
     },
     update(
       proxy,
@@ -95,10 +95,10 @@ export default {
         data: {updateLight},
       },
     ) {
-      const data = proxy.readQuery(this.query);
-      const lightIndex = data.allLights.findIndex(l => l.id == this.light.id);
-      data.allLights[lightIndex] = updateLight;
-      proxy.writeQuery({...this.query, data});
+      const data = proxy.readQuery(this.query)
+      const lightIndex = data.allLights.findIndex(l => l.id == this.light.id)
+      data.allLights[lightIndex] = updateLight
+      proxy.writeQuery({...this.query, data})
     },
     updateDelete(
       proxy,
@@ -106,17 +106,17 @@ export default {
         data: {deleteLight},
       },
     ) {
-      const data = proxy.readQuery(this.query);
+      const data = proxy.readQuery(this.query)
       proxy.writeQuery({
         ...this.query,
         data: {
           allLights: data.allLights.filter(s => s.id !== deleteLight.id),
         },
-      });
+      })
     },
     delLight() {
-      this.deleteLoading = true;
-      this.deleteError = undefined;
+      this.deleteLoading = true
+      this.deleteError = undefined
       this.$apollo
         .mutate({
           mutation: DELETE_LIGHT,
@@ -127,21 +127,21 @@ export default {
         })
         .catch(error => (this.deleteError = error))
         .then(() => {
-          this.deleteLoading = false;
-        });
+          this.deleteLoading = false
+        })
     },
     reset() {
-      ({power: this.power, bright: this.bright} = this.light);
-      this.color = this.rgbToHex(this.light.rgb);
+      ;({power: this.power, bright: this.bright} = this.light)
+      this.color = this.rgbToHex(this.light.rgb)
     },
     rgbToHex(rgb) {
-      return '#' + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+      return '#' + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)
     },
     confirm(msg) {
-      return window.confirm(msg);
+      return window.confirm(msg)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import {CREATE_CAST, GET_CASTS} from '../config/graph.js';
-import cast from './cast';
+import {CREATE_CAST, GET_CASTS} from '../config/graph.js'
+import cast from './cast'
 
 export default {
   name: 'Casts',
@@ -40,19 +40,19 @@ export default {
       allCasts: [],
       selectedCast: {},
       createCast: CREATE_CAST,
-    };
+    }
   },
   computed: {
     castsSorted() {
-      return this.$store.state.casts.filter(l => !this.allCasts.find(sl => sl.deviceId === l)).sort();
+      return this.$store.state.casts.filter(l => !this.allCasts.find(sl => sl.deviceId === l)).sort()
     },
   },
   methods: {
     onDone() {
-      this.selectedCast = {};
+      this.selectedCast = {}
     },
     onChange(mutateFct) {
-      setTimeout(() => this.selectedCast.deviceId && mutateFct(), 100);
+      setTimeout(() => this.selectedCast.deviceId && mutateFct(), 100)
     },
     update(
       proxy,
@@ -65,10 +65,10 @@ export default {
         variables: {
           sceneId: createCast.scene.id,
         },
-      };
-      const data = proxy.readQuery(query);
-      data.allCasts.push(createCast);
-      proxy.writeQuery({...query, data});
+      }
+      const data = proxy.readQuery(query)
+      data.allCasts.push(createCast)
+      proxy.writeQuery({...query, data})
     },
   },
   apollo: {
@@ -77,11 +77,11 @@ export default {
       variables() {
         return {
           sceneId: this.sceneId,
-        };
+        }
       },
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 @import '../styles/config';

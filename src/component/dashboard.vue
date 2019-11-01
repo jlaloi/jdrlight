@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import {ALL_DASHBOARD} from '../config/graph.js';
-import HTTP from '../config/http';
-import audioPlayer from './audioPlayer';
+import {ALL_DASHBOARD} from '../config/graph.js'
+import HTTP from '../config/http'
+import audioPlayer from './audioPlayer'
 
 export default {
   name: 'Dashboard',
@@ -31,24 +31,24 @@ export default {
       scenario: undefined,
       music: undefined,
       scene: {},
-    };
+    }
   },
   methods: {
     playScene(scene) {
-      this.scene = scene;
-      if (!this.scene.music || this.scene.music === this.music) this.updateLight();
-      this.music = this.scene.music;
-      this.updateCast();
+      this.scene = scene
+      if (!this.scene.music || this.scene.music === this.music) this.updateLight()
+      this.music = this.scene.music
+      this.updateCast()
     },
     async updateLight() {
       for (let i = 0; i < this.scene.lights.length; i++)
-        await HTTP.post(`/light/${this.scene.lights[i].deviceId}`, this.scene.lights[i]);
+        await HTTP.post(`/light/${this.scene.lights[i].deviceId}`, this.scene.lights[i])
     },
     updateCast() {
-      this.scene.casts.forEach(cast => HTTP.post(`/cast/${cast.deviceId}`, {media: cast.media}));
+      this.scene.casts.forEach(cast => HTTP.post(`/cast/${cast.deviceId}`, {media: cast.media}))
     },
     onMusicPlaying() {
-      this.updateLight();
+      this.updateLight()
     },
   },
   apollo: {
@@ -57,7 +57,7 @@ export default {
       fetchPolicy: 'network-only',
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -35,9 +35,9 @@
 </template>
 
 <script>
-import HTTP from '../config/http';
-import {DELETE_CAST, UPDATE_CAST, GET_CASTS} from '../config/graph.js';
-import {serverUrl} from '../config/router.js';
+import HTTP from '../config/http'
+import {DELETE_CAST, UPDATE_CAST, GET_CASTS} from '../config/graph.js'
+import {serverUrl} from '../config/router.js'
 
 export default {
   name: 'Cast',
@@ -58,37 +58,37 @@ export default {
       deleteLoading: false,
       deleteError: undefined,
       testLoading: false,
-    };
+    }
   },
   computed: {
     getConfig() {
       return {
         media: this.media,
-      };
+      }
     },
     unsaved() {
-      return this.media !== this.cast.media;
+      return this.media !== this.cast.media
     },
     imagesSorted() {
-      return this.$store.state.images.slice(0).sort();
+      return this.$store.state.images.slice(0).sort()
     },
   },
   mounted() {
-    this.reset();
+    this.reset()
   },
   methods: {
     async testCast() {
-      this.testLoading = true;
+      this.testLoading = true
       try {
-        const mediaCasted = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body;
+        const mediaCasted = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body
         if (mediaCasted !== this.media) {
-          this.media = mediaCasted;
-          this.$store.dispatch('fetchImages');
+          this.media = mediaCasted
+          this.$store.dispatch('fetchImages')
         }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-      this.testLoading = false;
+      this.testLoading = false
     },
     update(
       proxy,
@@ -96,10 +96,10 @@ export default {
         data: {updateCast},
       },
     ) {
-      const data = proxy.readQuery(this.query);
-      const castIndex = data.allCasts.findIndex(l => l.id == this.cast.id);
-      data.allCasts[castIndex] = updateCast;
-      proxy.writeQuery({...this.query, data});
+      const data = proxy.readQuery(this.query)
+      const castIndex = data.allCasts.findIndex(l => l.id == this.cast.id)
+      data.allCasts[castIndex] = updateCast
+      proxy.writeQuery({...this.query, data})
     },
     updateDelete(
       proxy,
@@ -107,17 +107,17 @@ export default {
         data: {deleteCast},
       },
     ) {
-      const data = proxy.readQuery(this.query);
+      const data = proxy.readQuery(this.query)
       proxy.writeQuery({
         ...this.query,
         data: {
           allCasts: data.allCasts.filter(s => s.id !== deleteCast.id),
         },
-      });
+      })
     },
     delCast() {
-      this.deleteLoading = true;
-      this.deleteError = undefined;
+      this.deleteLoading = true
+      this.deleteError = undefined
       this.$apollo
         .mutate({
           mutation: DELETE_CAST,
@@ -128,21 +128,21 @@ export default {
         })
         .catch(error => (this.deleteError = error))
         .then(() => {
-          this.deleteLoading = false;
-        });
+          this.deleteLoading = false
+        })
     },
     reset() {
-      this.media = this.cast.media;
+      this.media = this.cast.media
     },
     imageSelected() {
-      this.media = this.image;
-      this.image = undefined;
+      this.media = this.image
+      this.image = undefined
     },
     confirm(msg) {
-      return window.confirm(msg);
+      return window.confirm(msg)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

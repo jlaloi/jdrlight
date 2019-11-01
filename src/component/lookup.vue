@@ -10,32 +10,32 @@
 </template>
 
 <script>
-import HTTP from '../config/http';
+import HTTP from '../config/http'
 
 export default {
   name: 'Lookup',
   data() {
     return {
       loading: false,
-    };
+    }
   },
   methods: {
     async refreshCast() {
-      this.loading = true;
-      await HTTP.get('/lookup');
+      this.loading = true
+      await HTTP.get('/lookup')
       setTimeout(() => {
-        this.$store.dispatch('fetchCasts');
-        this.loading = false;
-      }, 5000);
+        this.$store.dispatch('fetchCasts')
+        this.loading = false
+      }, 5000)
     },
     async refreshMedia() {
-      this.loading = true;
+      this.loading = true
       Promise.all([this.$store.dispatch('fetchMusics'), this.$store.dispatch('fetchImages')]).finally(
         () => (this.loading = false),
-      );
+      )
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 #Lookup {

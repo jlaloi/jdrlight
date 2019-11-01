@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {CREATE_SCENE, GET_SCENES} from '../config/graph.js';
+import {CREATE_SCENE, GET_SCENES} from '../config/graph.js'
 
 export default {
   name: 'SceneAdd',
@@ -19,12 +19,12 @@ export default {
       name: undefined,
       error: undefined,
       addScene: CREATE_SCENE,
-    };
+    }
   },
   methods: {
     createScene() {
-      this.loading = true;
-      this.error = undefined;
+      this.loading = true
+      this.error = undefined
       this.$apollo
         .mutate({
           mutation: CREATE_SCENE,
@@ -43,20 +43,20 @@ export default {
               variables: {
                 scenario: createScene.scenario.id,
               },
-            };
-            const data = proxy.readQuery(query);
-            data.allScenes.push(createScene);
-            proxy.writeQuery({...query, data});
+            }
+            const data = proxy.readQuery(query)
+            data.allScenes.push(createScene)
+            proxy.writeQuery({...query, data})
           },
         })
         .catch(error => (this.error = error))
         .then(() => {
-          this.loading = false;
-          this.name = undefined;
-        });
+          this.loading = false
+          this.name = undefined
+        })
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import {routes} from '../config/router';
-import lookup from './lookup';
+import {routes} from '../config/router'
+import lookup from './lookup'
 
 export default {
   name: 'App',
@@ -21,8 +21,8 @@ export default {
   },
   computed: {
     routes() {
-      return routes.filter(r => !r.name);
+      return routes.filter(r => !r.name)
     },
   },
-};
+}
 </script>

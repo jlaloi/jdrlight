@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import YouTubePlayer from 'youtube-player';
+import YouTubePlayer from 'youtube-player'
 
 export default {
   name: 'AudioPlayer',
@@ -17,14 +17,14 @@ export default {
     return {
       audioPlayer: undefined,
       youTubePlayer: undefined,
-    };
+    }
   },
   computed: {
     audioPlayerId() {
-      return this._uid + 'AP';
+      return this._uid + 'AP'
     },
     ytPlayerId() {
-      return this._uid + 'YT';
+      return this._uid + 'YT'
     },
     ytConfig() {
       return {
@@ -32,67 +32,67 @@ export default {
         width: '312',
         autoplay: 0,
         loop: 1,
-      };
+      }
     },
     isAudioFile() {
-      return this.isFile(this.music);
+      return this.isFile(this.music)
     },
   },
   watch: {
     music(newMusic, oldMusic) {
       if (this.isAudioFile && this.youTubePlayer) {
-        this.youTubePlayer.destroy();
-        this.youTubePlayer = undefined;
+        this.youTubePlayer.destroy()
+        this.youTubePlayer = undefined
       }
       // Required YT Player
       this.$nextTick(() => {
-        if (!oldMusic || this.isAudioFile !== this.isFile(oldMusic)) this.initPlayer();
-        else this.playMusic();
-      });
+        if (!oldMusic || this.isAudioFile !== this.isFile(oldMusic)) this.initPlayer()
+        else this.playMusic()
+      })
     },
   },
   mounted() {
-    this.initPlayer();
+    this.initPlayer()
   },
   methods: {
     isFile(music) {
-      return music && music.indexOf('.') !== -1;
+      return music && music.indexOf('.') !== -1
     },
     initPlayer() {
-      if (this.isAudioFile) this.initAudioFile();
-      else this.initVideo();
+      if (this.isAudioFile) this.initAudioFile()
+      else this.initVideo()
     },
     playMusic() {
-      if (this.isAudioFile) this.playAudioFile();
-      else this.playVideo();
+      if (this.isAudioFile) this.playAudioFile()
+      else this.playVideo()
     },
     initAudioFile() {
-      this.audioPlayer = document.getElementById(this.audioPlayerId);
-      this.audioPlayer.onplaying = this.playing;
-      this.playAudioFile();
+      this.audioPlayer = document.getElementById(this.audioPlayerId)
+      this.audioPlayer.onplaying = this.playing
+      this.playAudioFile()
     },
     playAudioFile() {
-      this.audioPlayer.src = this.music;
-      this.audioPlayer.load();
-      if (!this.config) this.audioPlayer.play();
+      this.audioPlayer.src = this.music
+      this.audioPlayer.load()
+      if (!this.config) this.audioPlayer.play()
     },
     initVideo() {
-      this.youTubePlayer = YouTubePlayer(this.ytPlayerId, {...this.ytConfig});
+      this.youTubePlayer = YouTubePlayer(this.ytPlayerId, {...this.ytConfig})
       this.youTubePlayerEvent = this.youTubePlayer.on('stateChange', event => {
-        if (event && event.data === 1) this.playing();
-      });
-      this.playVideo();
+        if (event && event.data === 1) this.playing()
+      })
+      this.playVideo()
     },
     playVideo() {
-      this.youTubePlayer.loadVideoById(this.music);
-      if (!this.config) this.youTubePlayer.playVideo();
-      else this.youTubePlayer.stopVideo();
+      this.youTubePlayer.loadVideoById(this.music)
+      if (!this.config) this.youTubePlayer.playVideo()
+      else this.youTubePlayer.stopVideo()
     },
     playing() {
-      if (this.onPlaying) this.onPlaying();
+      if (this.onPlaying) this.onPlaying()
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 #audioPlayer {

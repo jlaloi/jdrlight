@@ -7,7 +7,6 @@ module.exports = {
     'vue/html-self-closing': 'off',
     'no-console': 'off',
     'max-len': 'off',
-    semi: ['error', 'always'],
     quotes: ['error', 'single']
   }
 };

@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import {GET_SCENARIO, UPDATE_SCENARIO} from '../config/graph.js';
-import scenes from './scenes';
+import {GET_SCENARIO, UPDATE_SCENARIO} from '../config/graph.js'
+import scenes from './scenes'
 
 export default {
   name: 'Scenario',
@@ -32,16 +32,16 @@ export default {
       toggleChangeName: false,
       name: undefined,
       updateScenario: UPDATE_SCENARIO,
-    };
+    }
   },
   computed: {
     id() {
-      return this.$route.params.id;
+      return this.$route.params.id
     },
   },
   methods: {
     onDone() {
-      this.toggleChangeName = !this.toggleChangeName;
+      this.toggleChangeName = !this.toggleChangeName
     },
   },
   apollo: {
@@ -50,11 +50,11 @@ export default {
       variables() {
         return {
           id: this.id,
-        };
+        }
       },
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import {CREATE_LIGHT, GET_LIGHTS} from '../config/graph.js';
-import light from './light';
+import {CREATE_LIGHT, GET_LIGHTS} from '../config/graph.js'
+import light from './light'
 
 export default {
   name: 'Lights',
@@ -36,19 +36,19 @@ export default {
       allLights: [],
       selectedLight: {},
       createLight: CREATE_LIGHT,
-    };
+    }
   },
   computed: {
     lightsSorted() {
-      return this.$store.state.lights.filter(l => !this.allLights.find(sl => sl.deviceId === l.deviceId)).sort();
+      return this.$store.state.lights.filter(l => !this.allLights.find(sl => sl.deviceId === l.deviceId)).sort()
     },
   },
   methods: {
     onDone() {
-      this.selectedLight = {};
+      this.selectedLight = {}
     },
     onChange(mutateFct) {
-      setTimeout(() => this.selectedLight && mutateFct(), 100);
+      setTimeout(() => this.selectedLight && mutateFct(), 100)
     },
     update(
       proxy,
@@ -61,10 +61,10 @@ export default {
         variables: {
           sceneId: createLight.scene.id,
         },
-      };
-      const data = proxy.readQuery(query);
-      data.allLights.push(createLight);
-      proxy.writeQuery({...query, data});
+      }
+      const data = proxy.readQuery(query)
+      data.allLights.push(createLight)
+      proxy.writeQuery({...query, data})
     },
   },
   apollo: {
@@ -73,11 +73,11 @@ export default {
       variables() {
         return {
           sceneId: this.sceneId,
-        };
+        }
       },
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
 @import '../styles/config';

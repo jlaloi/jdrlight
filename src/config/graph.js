@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 // https://console.graph.cool/
 
@@ -12,7 +12,7 @@ export const ALL_SCENARIOS = gql`
       name
     }
   }
-`;
+`
 
 export const GET_SCENARIO = gql`
   query($id: ID!) {
@@ -27,7 +27,7 @@ export const GET_SCENARIO = gql`
       }
     }
   }
-`;
+`
 
 export const CREATE_SCENARIO = gql`
   mutation($name: String!) {
@@ -36,7 +36,7 @@ export const CREATE_SCENARIO = gql`
       name
     }
   }
-`;
+`
 
 export const UPDATE_SCENARIO = gql`
   mutation($id: ID!, $name: String!) {
@@ -45,7 +45,7 @@ export const UPDATE_SCENARIO = gql`
       name
     }
   }
-`;
+`
 
 export const DELETE_SCENARIO = gql`
   mutation($id: ID!) {
@@ -53,7 +53,7 @@ export const DELETE_SCENARIO = gql`
       id
     }
   }
-`;
+`
 
 /*
  * SCENE
@@ -69,7 +69,7 @@ export const GET_SCENES = gql`
       }
     }
   }
-`;
+`
 
 export const CREATE_SCENE = gql`
   mutation($name: String!, $scenarioId: ID!) {
@@ -82,7 +82,7 @@ export const CREATE_SCENE = gql`
       }
     }
   }
-`;
+`
 
 export const UPDATE_SCENE = gql`
   mutation($id: ID!, $name: String!, $music: String) {
@@ -95,7 +95,7 @@ export const UPDATE_SCENE = gql`
       }
     }
   }
-`;
+`
 
 export const DELETE_SCENE = gql`
   mutation($id: ID!) {
@@ -103,7 +103,7 @@ export const DELETE_SCENE = gql`
       id
     }
   }
-`;
+`
 
 /*
  * LIGHT
@@ -121,7 +121,7 @@ export const GET_LIGHTS = gql`
       }
     }
   }
-`;
+`
 
 export const CREATE_LIGHT = gql`
   mutation($deviceId: String, $power: String, $bright: Int, $rgb: [Int!]!, $sceneId: ID!) {
@@ -136,7 +136,7 @@ export const CREATE_LIGHT = gql`
       }
     }
   }
-`;
+`
 
 export const UPDATE_LIGHT = gql`
   mutation($id: ID!, $power: String, $bright: Int, $rgb: [Int!]!) {
@@ -151,7 +151,7 @@ export const UPDATE_LIGHT = gql`
       }
     }
   }
-`;
+`
 
 export const DELETE_LIGHT = gql`
   mutation($id: ID!) {
@@ -159,7 +159,7 @@ export const DELETE_LIGHT = gql`
       id
     }
   }
-`;
+`
 
 /*
  * DASHBOARD (=ALL)
@@ -185,7 +185,7 @@ export const ALL_DASHBOARD = gql`
       }
     }
   }
-`;
+`
 
 /*
  * LIGHT
@@ -201,7 +201,7 @@ export const GET_CASTS = gql`
       }
     }
   }
-`;
+`
 
 export const CREATE_CAST = gql`
   mutation($deviceId: String, $media: String, $sceneId: ID!) {
@@ -214,7 +214,7 @@ export const CREATE_CAST = gql`
       }
     }
   }
-`;
+`
 
 export const UPDATE_CAST = gql`
   mutation($id: ID!, $media: String) {
@@ -227,7 +227,7 @@ export const UPDATE_CAST = gql`
       }
     }
   }
-`;
+`
 
 export const DELETE_CAST = gql`
   mutation($id: ID!) {
@@ -235,4 +235,4 @@ export const DELETE_CAST = gql`
       id
     }
   }
-`;
+`
