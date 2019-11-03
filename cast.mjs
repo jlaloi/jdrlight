@@ -9,6 +9,23 @@ const MediaPlayer = castv2.MediaPlayer()
 const devices = new Map()
 
 /*
+ * Interval to prevent sleep mod
+ */
+const refreshIntervals = new Map()
+const REFRESH_INTERVAL = 10 * 1000
+const stopRefresh = deviceName => {
+  if (refreshIntervals.has(deviceName)) {
+    clearInterval(refreshIntervals.get(deviceName))
+    refreshIntervals.delete(deviceName)
+  }
+}
+const startRefresh = (deviceName, media, imgDir, serverHost) => {
+  stopRefresh(deviceName)
+  const refresh = () => cast(deviceName, media, imgDir, serverHost)
+  refreshIntervals.set(deviceName, setInterval(refresh, REFRESH_INTERVAL))
+}
+
+/*
  * Lookup
  */
 export const initLookUpCast = () => new Scanner(device => devices.set(device, undefined), {scanInterval: 0})
@@ -35,12 +52,14 @@ export const cast = async (deviceName, media, imgDir, serverHost) => {
     await mediaPlayer.playUrlPromise(media)
     // await mediaPlayer.close();
     resolve(media)
+    startRefresh(deviceName, media, imgDir, serverHost)
   }
   return castUpdate(deviceName, onConnect)
 }
 
 export const castStop = async deviceName => {
   console.log(`Stop cast on ${deviceName}`)
+  stopRefresh(deviceName)
   const onConnect = async (device, mediaPlayer, resolve) => {
     await mediaPlayer.close()
     await mediaPlayer.stopClientPromise()

@@ -60,9 +60,10 @@ export const DELETE_SCENARIO = gql`
  */
 export const GET_SCENES = gql`
   query($scenario: ID!) {
-    allScenes(filter: {scenario: {id: $scenario}}) {
+    allScenes(filter: {scenario: {id: $scenario}}, orderBy: order_ASC) {
       id
       name
+      order
       music
       scenario {
         id
@@ -72,10 +73,11 @@ export const GET_SCENES = gql`
 `
 
 export const CREATE_SCENE = gql`
-  mutation($name: String!, $scenarioId: ID!) {
-    createScene(name: $name, scenarioId: $scenarioId) {
+  mutation($name: String!, $scenarioId: ID!, $order: Int) {
+    createScene(name: $name, scenarioId: $scenarioId, order: $order) {
       id
       name
+      order
       music
       scenario {
         id
@@ -85,13 +87,34 @@ export const CREATE_SCENE = gql`
 `
 
 export const UPDATE_SCENE = gql`
-  mutation($id: ID!, $name: String!, $music: String) {
-    updateScene(id: $id, name: $name, music: $music) {
+  mutation($id: ID!, $name: String!, $music: String, $order: Int) {
+    updateScene(id: $id, name: $name, music: $music, order: $order) {
       id
       name
+      order
       music
       scenario {
         id
+      }
+    }
+  }
+`
+
+export const SCENE_COMPLETE = gql`
+  query($id: ID!) {
+    Scene(id: $id) {
+      name
+      music
+      order
+      lights {
+        deviceId
+        power
+        bright
+        rgb
+      }
+      casts {
+        deviceId
+        media
       }
     }
   }
@@ -169,9 +192,10 @@ export const ALL_DASHBOARD = gql`
     allScenarios {
       id
       name
-      scenes {
+      scenes(orderBy: order_ASC) {
         name
         music
+        order
         lights {
           deviceId
           power

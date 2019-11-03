@@ -1,8 +1,8 @@
 import Express from 'express'
 import bodyParser from 'body-parser'
 import compression from 'compression'
-
-import fs from 'fs'
+import {default as fsWithCallbacks} from 'fs'
+const fs = fsWithCallbacks.promises
 import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light'
 import {getCasts, cast, castStop, initLookUpCast} from './cast'
 
@@ -73,14 +73,19 @@ app.delete('/cast/:deviceId', async (req, res) => {
 
 app.use(Express.static(DIR_PUBLIC))
 app.use('/fonts', Express.static(DIR_FONTS))
-app.get('/musics', (req, res) =>
-  fs.readdir(DIR_PUBLIC + DIR_MUSIC, (err, files) => res.json(files.map(f => DIR_MUSIC + f))),
-)
+app.get('/musics', async (req, res) => res.json(await readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC)))
 
-app.get('/images', (req, res) =>
-  fs.readdir(DIR_PUBLIC + DIR_IMG, (err, files) => res.json(files.map(f => DIR_IMG + f))),
-)
+const readDir = async (path, prefix) => {
+  const result = []
+  for (const file of await fs.readdir(path)) {
+    if ((await fs.lstat(path + file)).isDirectory())
+      result.push.apply(result, await readDir(path + file + '/', prefix + file + '/'))
+    else result.push(prefix + file)
+  }
+  return result
+}
 
+app.get('/images', async (req, res) => res.json(await readDir(DIR_PUBLIC + DIR_IMG, DIR_IMG)))
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
 
 initLookup()

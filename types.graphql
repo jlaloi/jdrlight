@@ -8,6 +8,7 @@ type Scene @model {
   id: ID! @isUnique
   name: String
   music: String
+  order: Int
   lights: [Light!]! @relation(name: "SceneLights")
   scenario: Scenario @relation(name: "ScenarioScenes")
   casts: [Cast!]! @relation(name: "SceneCasts")

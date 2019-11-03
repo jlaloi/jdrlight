@@ -1,10 +1,15 @@
 <template>
   <div id="scene">
-    <ApolloMutation :mutation="updateScene" :variables="{id: scene.id, name, music}" :update="update">
+    <ApolloMutation
+      :mutation="updateScene"
+      :variables="{id: scene.id, name, music, order: Number(order)}"
+      :update="update"
+    >
       <template slot-scope="{mutate, loading, error}">
         <div v-if="loading">Loading</div>
         <div v-else>
           <input v-model="name" type="text" placeholder="Scene name" class="sceneName" />
+          <input v-model="order" type="number" placeholder="Order" class="sceneOrder" />
           <!-- Actions -->
           <div class="actions">
             <i v-if="!loading" class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
@@ -39,7 +44,7 @@
 import audioPlayer from './audioPlayer'
 import lights from './lights'
 import casts from './casts'
-import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES} from '../config/graph'
+import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES, SCENE_COMPLETE} from '../config/graph'
 
 export default {
   name: 'Scene',
@@ -53,6 +58,7 @@ export default {
     return {
       updateScene: UPDATE_SCENE,
       name: undefined,
+      order: 0,
       music: undefined,
       deleteLoading: false,
       deleteError: undefined,
@@ -66,7 +72,7 @@ export default {
       return this.scene.lights.slice(0).sort((a, b) => a.deviceId - b.deviceId)
     },
     unsaved() {
-      return this.name !== this.scene.name || this.music != this.scene.music
+      return this.name !== this.scene.name || this.music != this.scene.music || this.order != this.scene.order
     },
   },
   mounted() {
@@ -74,7 +80,7 @@ export default {
   },
   methods: {
     reset() {
-      ;({name: this.name, music: this.music} = this.scene)
+      ;({name: this.name, music: this.music, order: this.order} = this.scene)
     },
     update(
       proxy,
@@ -91,6 +97,7 @@ export default {
       const data = proxy.readQuery(query)
       const sceneIndex = data.allScenes.findIndex(s => s.id === this.scene.id)
       data.allScenes[sceneIndex] = updateScene
+      data.allScenes.sort((a, b) => a.order - b.order)
       proxy.writeQuery({...query, data})
     },
     updateDelete(
@@ -163,8 +170,12 @@ export default {
     display: inline-block;
   }
   .sceneName {
+    width: 12em;
     font-weight: bold;
     text-align: center;
+  }
+  .sceneOrder {
+    width: 3em;
   }
   .audio {
     margin: 0;

@@ -21,16 +21,28 @@ export default {
       addScene: CREATE_SCENE,
     }
   },
+  apollo: {
+    allScenes: {
+      query: GET_SCENES,
+      variables() {
+        return {
+          scenario: this.scenarioId,
+        }
+      },
+    },
+  },
   methods: {
     createScene() {
       this.loading = true
       this.error = undefined
+      const order = 10 + this.allScenes.reduce((order, scene) => Math.max(order, scene.order), 0)
       this.$apollo
         .mutate({
           mutation: CREATE_SCENE,
           variables: {
             name: this.name,
             scenarioId: this.scenarioId,
+            order,
           },
           update(
             proxy,
