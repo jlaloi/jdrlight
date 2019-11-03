@@ -1,6 +1,7 @@
 import {default as castv2} from 'castv2-player'
 import fs from 'fs'
 import request from 'request'
+import os from 'os'
 
 const Scanner = castv2.Scanner()
 const ScannerPromise = castv2.ScannerPromise()
@@ -12,7 +13,7 @@ const devices = new Map()
  * Interval to prevent sleep mod
  */
 const refreshIntervals = new Map()
-const REFRESH_INTERVAL = 10 * 1000
+const REFRESH_INTERVAL = 180 * 1000
 const stopRefresh = deviceName => {
   if (refreshIntervals.has(deviceName)) {
     clearInterval(refreshIntervals.get(deviceName))
@@ -26,6 +27,17 @@ const startRefresh = (deviceName, media, imgDir, serverHost) => {
 }
 
 /*
+ * Local addresses for cache
+ */
+const networkInterfaces = os.networkInterfaces()
+const ips = Object.keys(networkInterfaces)
+  .map(key => networkInterfaces[key])
+  .flat()
+  .map(i => i.address)
+  .filter(i => !i.includes('::'))
+const isLocalUrl = url => ips.find(ip => url.match(new RegExp(`^http?://${ip}?:([0-9]*)/(.*)`)))
+
+/*
  * Lookup
  */
 export const initLookUpCast = () => new Scanner(device => devices.set(device, undefined), {scanInterval: 0})
@@ -34,7 +46,7 @@ export const getCasts = () => [...devices.keys()].map(c => c.name)
 
 export const cast = async (deviceName, media, imgDir, serverHost) => {
   if (media === 'off') return castStop(deviceName)
-  if (imgDir && serverHost) {
+  if (imgDir && serverHost && !isLocalUrl(media)) {
     // Download local copie
     const fileName = media.substr(media.lastIndexOf('/') + 1)
     const filePath = imgDir + fileName

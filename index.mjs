@@ -3,8 +3,8 @@ import bodyParser from 'body-parser'
 import compression from 'compression'
 import {default as fsWithCallbacks} from 'fs'
 const fs = fsWithCallbacks.promises
-import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light'
-import {getCasts, cast, castStop, initLookUpCast} from './cast'
+import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light.mjs'
+import {getCasts, cast, castStop, initLookUpCast} from './cast.mjs'
 
 const PORT = 9090
 const DIR_PUBLIC = 'public/'
