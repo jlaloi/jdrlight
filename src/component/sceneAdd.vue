@@ -2,13 +2,14 @@
   <div id="sceneAdd">
     <div v-if="loading">Loading</div>
     <input v-model="name" :disabled="loading" type="text" placeholder="Scene name" />
-    <button :disabled="loading || !name" @click="createScene()">Add</button>
+    <button :disabled="loading || !name" @click="create()">Add</button>
     <p v-if="error">An error occured: {{ error }}</p>
   </div>
 </template>
 
 <script>
-import {CREATE_SCENE, GET_SCENES} from '../config/graph.js'
+import {GET_SCENES} from '../config/graph'
+import {createScene} from '../config/duplicate'
 
 export default {
   name: 'SceneAdd',
@@ -18,7 +19,6 @@ export default {
       loading: false,
       name: undefined,
       error: undefined,
-      addScene: CREATE_SCENE,
     }
   },
   apollo: {
@@ -32,40 +32,10 @@ export default {
     },
   },
   methods: {
-    createScene() {
-      this.loading = true
-      this.error = undefined
+    async create() {
       const order = 10 + this.allScenes.reduce((order, scene) => Math.max(order, scene.order), 0)
-      this.$apollo
-        .mutate({
-          mutation: CREATE_SCENE,
-          variables: {
-            name: this.name,
-            scenarioId: this.scenarioId,
-            order,
-          },
-          update(
-            proxy,
-            {
-              data: {createScene},
-            },
-          ) {
-            const query = {
-              query: GET_SCENES,
-              variables: {
-                scenario: createScene.scenario.id,
-              },
-            }
-            const data = proxy.readQuery(query)
-            data.allScenes.push(createScene)
-            proxy.writeQuery({...query, data})
-          },
-        })
-        .catch(error => (this.error = error))
-        .then(() => {
-          this.loading = false
-          this.name = undefined
-        })
+      await createScene.bind(this)(this.scenarioId, order, this.name)
+      this.name = undefined
     },
   },
 }

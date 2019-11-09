@@ -1,28 +1,20 @@
 <template>
   <div id="lights">
     <!-- Add Light -->
-    <ApolloMutation
-      :mutation="createLight"
-      :variables="{deviceId: selectedLight.deviceId, power: 'ON', bright: 100, rgb: [255, 255, 255], sceneId}"
-      :update="update"
-      @done="onDone"
-    >
-      <template slot-scope="{mutate, loading, error}">
-        <div v-if="loading">Loading</div>
-        <select v-model="selectedLight" :disabled="loading || lightsSorted.length === 0" @change="onChange(mutate)">
-          <option />
-          <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.name || l.deviceId }}</option>
-        </select>
-        <p v-if="error">An error occured: {{ error }}</p>
-      </template>
-    </ApolloMutation>
+    <div v-if="loading">Loading</div>
+    <select v-if="!loading" v-model="selectedLight" :disabled="loading || lightsSorted.length === 0" @change="onChange">
+      <option />
+      <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.name || l.deviceId }}</option>
+    </select>
+    <p v-if="error">An error occured: {{ error }}</p>
     <!-- Light  List -->
     <light v-for="l in allLights" :key="l.id" :light="l"></light>
   </div>
 </template>
 
 <script>
-import {CREATE_LIGHT, GET_LIGHTS} from '../config/graph.js'
+import {createLight} from '../config/duplicate'
+import {GET_LIGHTS} from '../config/graph'
 import light from './light'
 
 export default {
@@ -35,36 +27,22 @@ export default {
     return {
       allLights: [],
       selectedLight: {},
-      createLight: CREATE_LIGHT,
+      loading: false,
+      error: undefined,
     }
   },
   computed: {
     lightsSorted() {
-      return this.$store.state.lights.filter(l => !this.allLights.find(sl => sl.deviceId === l.deviceId)).sort()
+      return this.$store.state.lights.filter(l => !this.allLights.find(sl => sl.deviceId === l.deviceId))
     },
   },
   methods: {
-    onDone() {
+    async create() {
+      await createLight.bind(this)(this.sceneId, this.selectedLight.deviceId, 'ON', 100, [255, 255, 255])
       this.selectedLight = {}
     },
-    onChange(mutateFct) {
-      setTimeout(() => this.selectedLight && mutateFct(), 100)
-    },
-    update(
-      proxy,
-      {
-        data: {createLight},
-      },
-    ) {
-      const query = {
-        query: GET_LIGHTS,
-        variables: {
-          sceneId: createLight.scene.id,
-        },
-      }
-      const data = proxy.readQuery(query)
-      data.allLights.push(createLight)
-      proxy.writeQuery({...query, data})
+    onChange() {
+      setTimeout(() => this.selectedLight && this.create(), 100)
     },
   },
   apollo: {
@@ -83,12 +61,10 @@ export default {
 @import '../styles/config';
 #lights {
   border-top: $border;
-  margin: 0;
-  padding: 0;
-  select,
-  button {
+  select {
+    margin: 0.5em auto 0.5em auto;
     width: 10em;
-    display: inline-block;
+    display: block;
   }
 }
 </style>

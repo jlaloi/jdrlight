@@ -1,32 +1,20 @@
 <template>
   <div id="casts">
     <!-- Add Cast -->
-    <ApolloMutation
-      :mutation="createCast"
-      :variables="{deviceId: selectedCast.deviceId, media: '', sceneId}"
-      :update="update"
-      @done="onDone"
-    >
-      <template slot-scope="{mutate, loading, error}">
-        <div v-if="loading">Loading</div>
-        <select
-          v-model="selectedCast.deviceId"
-          :disabled="loading || castsSorted.length === 0"
-          @change="onChange(mutate)"
-        >
-          <option />
-          <option v-for="(l, index) in castsSorted" :key="index" :value="l">{{ l }}</option>
-        </select>
-        <p v-if="error">An error occured: {{ error }}</p>
-      </template>
-    </ApolloMutation>
+    <div v-if="loading">Loading</div>
+    <select v-else v-model="selectedCast.deviceId" :disabled="loading || castsSorted.length === 0" @change="onChange">
+      <option />
+      <option v-for="(l, index) in castsSorted" :key="index" :value="l">{{ l }}</option>
+    </select>
+    <p v-if="error">An error occured: {{ error }}</p>
     <!-- Cast List -->
     <cast v-for="c in allCasts" :key="c.id" :cast="c"></cast>
   </div>
 </template>
 
 <script>
-import {CREATE_CAST, GET_CASTS} from '../config/graph.js'
+import {CREATE_CAST, GET_CASTS} from '../config/graph'
+import {createCast} from '../config/duplicate'
 import cast from './cast'
 
 export default {
@@ -40,6 +28,8 @@ export default {
       allCasts: [],
       selectedCast: {},
       createCast: CREATE_CAST,
+      loading: false,
+      error: undefined,
     }
   },
   computed: {
@@ -48,27 +38,12 @@ export default {
     },
   },
   methods: {
-    onDone() {
+    async create() {
+      await createCast.bind(this)(this.sceneId, this.selectedCast.deviceId)
       this.selectedCast = {}
     },
-    onChange(mutateFct) {
-      setTimeout(() => this.selectedCast.deviceId && mutateFct(), 100)
-    },
-    update(
-      proxy,
-      {
-        data: {createCast},
-      },
-    ) {
-      const query = {
-        query: GET_CASTS,
-        variables: {
-          sceneId: createCast.scene.id,
-        },
-      }
-      const data = proxy.readQuery(query)
-      data.allCasts.push(createCast)
-      proxy.writeQuery({...query, data})
+    onChange() {
+      setTimeout(() => this.selectedCast.deviceId && this.create(), 100)
     },
   },
   apollo: {
@@ -87,12 +62,10 @@ export default {
 @import '../styles/config';
 #casts {
   border-top: $border;
-  margin: 0;
-  padding: 0;
-  select,
-  button {
+  select {
+    margin: 0.5em auto 0.5em auto;
     width: 10em;
-    display: inline-block;
+    display: block;
   }
 }
 </style>

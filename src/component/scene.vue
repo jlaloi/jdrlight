@@ -13,6 +13,7 @@
           <!-- Actions -->
           <div class="actions">
             <i v-if="!loading" class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
+            <i class="material-icons clickable" @click="duplicate()" title="duplicate">content_copy</i>
             <i
               v-if="!deleteLoading"
               class="material-icons clickable"
@@ -45,6 +46,7 @@ import audioPlayer from './audioPlayer'
 import lights from './lights'
 import casts from './casts'
 import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES, SCENE_COMPLETE} from '../config/graph'
+import {duplicateScene} from '../config/duplicate'
 
 export default {
   name: 'Scene',
@@ -139,6 +141,9 @@ export default {
     confirm(msg) {
       return window.confirm(msg)
     },
+    async duplicate() {
+      await duplicateScene.bind(this)(this.scene)
+    },
   },
 }
 </script>
@@ -166,11 +171,11 @@ export default {
     width: 16.5em;
   }
   .actions {
-    width: 4em;
+    width: 6em;
     display: inline-block;
   }
   .sceneName {
-    width: 12em;
+    width: 10em;
     font-weight: bold;
     text-align: center;
   }
