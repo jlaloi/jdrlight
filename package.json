@@ -22,7 +22,7 @@
     "watch": [
       "app"
     ],
-    "exec": "npm start:dev",
+    "exec": "npm run start:dev",
     "ext": "ts"
   },
   "author": "julien.laloi@gmail.com",
