@@ -13,7 +13,7 @@
           <!-- Actions -->
           <div class="actions">
             <i v-if="!loading" class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
-            <i class="material-icons clickable" @click="duplicate()" title="duplicate">content_copy</i>
+            <i class="material-icons clickable" title="duplicate" @click="duplicate()">content_copy</i>
             <i
               v-if="!deleteLoading"
               class="material-icons clickable"
@@ -46,7 +46,7 @@
 import audioPlayer from './audioPlayer'
 import lights from './lights'
 import casts from './casts'
-import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES, SCENE_COMPLETE} from '../config/graph'
+import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES} from '../config/graph'
 import {duplicateScene} from '../config/duplicate'
 
 export default {
@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     reset() {
-      ;({name: this.name, music: this.music, order: this.order} = this.scene)
+      ({name: this.name, music: this.music, order: this.order} = this.scene)
     },
     update(
       proxy,

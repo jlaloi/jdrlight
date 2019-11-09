@@ -1,7 +1,7 @@
-import {default as castv2} from 'castv2-player'
-import fs from 'fs'
-import request from 'request'
-import os from 'os'
+import * as castv2 from 'castv2-player'
+import * as fs from 'fs'
+import * as request from 'request'
+import * as os from 'os'
 
 const Scanner = castv2.Scanner()
 const ScannerPromise = castv2.ScannerPromise()
@@ -14,13 +14,13 @@ const devices = new Map()
  */
 const refreshIntervals = new Map()
 const REFRESH_INTERVAL = 180 * 1000
-const stopRefresh = deviceName => {
+const stopRefresh = (deviceName: string) => {
   if (refreshIntervals.has(deviceName)) {
     clearInterval(refreshIntervals.get(deviceName))
     refreshIntervals.delete(deviceName)
   }
 }
-const startRefresh = (deviceName, media, imgDir, serverHost) => {
+const startRefresh = (deviceName: string, media: string, imgDir: string, serverHost: string) => {
   stopRefresh(deviceName)
   const refresh = () => cast(deviceName, media, imgDir, serverHost)
   refreshIntervals.set(deviceName, setInterval(refresh, REFRESH_INTERVAL))
@@ -35,7 +35,7 @@ const ips = Object.keys(networkInterfaces)
   .flat()
   .map(i => i.address)
   .filter(i => !i.includes('::'))
-const isLocalUrl = url => ips.find(ip => url.match(new RegExp(`^http?://${ip}?:([0-9]*)/(.*)`)))
+const isLocalUrl = (url: string) => ips.find(ip => url.match(new RegExp(`^http?://${ip}?:([0-9]*)/(.*)`)))
 
 /*
  * Lookup
@@ -44,7 +44,7 @@ export const initLookUpCast = () => new Scanner(device => devices.set(device.nam
 
 export const getCasts = () => [...devices.keys()]
 
-export const cast = async (deviceName, media, imgDir, serverHost) => {
+export const cast = async (deviceName: string, media: string, imgDir: string, serverHost: string) => {
   if (!media) return castStop(deviceName)
   if (imgDir && serverHost && !isLocalUrl(media)) {
     // Download local copie
@@ -59,17 +59,15 @@ export const cast = async (deviceName, media, imgDir, serverHost) => {
       }
     }
   }
-  console.log(`Cast ${JSON.stringify(media)} to ${deviceName}`)
   const onConnect = async (device, mediaPlayer, resolve) => {
     await mediaPlayer.playUrlPromise(media)
-    // await mediaPlayer.close();
     startRefresh(deviceName, media, imgDir, serverHost)
     resolve(media)
   }
   return castUpdate(deviceName, onConnect)
 }
 
-export const castStop = async deviceName => {
+export const castStop = async (deviceName: string) => {
   stopRefresh(deviceName)
   const onConnect = async (device, mediaPlayer, resolve) => {
     await mediaPlayer.close()
@@ -80,7 +78,7 @@ export const castStop = async deviceName => {
   return castUpdate(deviceName, onConnect)
 }
 
-const castUpdate = async (deviceName, onConnect) =>
+const castUpdate = async (deviceName: string, onConnect) =>
   new Promise(async (resolve, reject) => {
     try {
       if (!devices.has(deviceName))
@@ -104,9 +102,8 @@ const castUpdate = async (deviceName, onConnect) =>
     }
   })
 
-export const download = (url, target) =>
+export const download = (url: string, target: string) =>
   new Promise((resolve, reject) => {
-    console.log(`Downloading ${url} to ${target}`)
     request(url)
       .pipe(fs.createWriteStream(target))
       .on('error', error => reject(error))

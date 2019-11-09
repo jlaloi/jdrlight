@@ -131,7 +131,7 @@ export default {
         })
     },
     reset() {
-      ;({power: this.power, bright: this.bright} = this.light)
+      ({power: this.power, bright: this.bright} = this.light)
       this.color = this.rgbToHex(this.light.rgb)
     },
     rgbToHex(rgb) {

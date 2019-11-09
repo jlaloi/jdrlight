@@ -1,10 +1,10 @@
-import Express from 'express'
-import bodyParser from 'body-parser'
-import compression from 'compression'
-import {default as fsWithCallbacks} from 'fs'
+import * as express from 'express'
+import * as bodyParser from 'body-parser'
+import * as compression from 'compression'
+import * as fsWithCallbacks from 'fs'
 const fs = fsWithCallbacks.promises
-import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light.mjs'
-import {getCasts, cast, castStop, initLookUpCast} from './cast.mjs'
+import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light'
+import {getCasts, cast, castStop, initLookUpCast} from './cast'
 
 const PORT = 9090
 const DIR_PUBLIC = 'public/'
@@ -17,7 +17,7 @@ const initLookup = () => {
   initLookUpCast()
 }
 
-const app = Express()
+const app = express()
 app.use(compression({filter: () => true}))
 app.use(bodyParser.json())
 
@@ -32,7 +32,6 @@ app.get('/light', (req, res) => res.json(getLights()))
 app.post('/light/:deviceId', async (req, res) => {
   try {
     const scene = req.body
-    console.log('scene', scene)
     if (scene.power) await setPower(req.params.deviceId, scene.power)
     if (scene.rgb) await setRGB(req.params.deviceId, scene.rgb)
     if (scene.bright) await setBright(req.params.deviceId, Number(scene.bright))
@@ -71,11 +70,11 @@ app.delete('/cast/:deviceId', async (req, res) => {
   }
 })
 
-app.use(Express.static(DIR_PUBLIC))
-app.use('/fonts', Express.static(DIR_FONTS))
+app.use(express.static(DIR_PUBLIC))
+app.use('/fonts', express.static(DIR_FONTS))
 app.get('/musics', async (req, res) => res.json(await readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC)))
 
-const readDir = async (path, prefix) => {
+const readDir = async (path: string, prefix: string) => {
   const result = []
   for (const file of await fs.readdir(path)) {
     if ((await fs.lstat(path + file)).isDirectory())

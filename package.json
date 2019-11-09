@@ -2,13 +2,28 @@
   "name": "jdrlight",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./app/index.ts",
   "scripts": {
     "dev": "parcel watch ./src/index.html --out-dir ./public",
     "prod": "parcel build ./src/index.html --out-dir ./public",
-    "start": "node --experimental-modules index.mjs",
     "lint": "eslint --ext .js,.vue --fix src",
-    "lintB": "eslint  --fix ./*.mjs"
+    "start": "node ./dist/index.js",
+    "start:dev": "node --inspect=5858 -r ts-node/register ./app/index.ts",
+    "start:watch": "nodemon",
+    "build": "tsc"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "app"
+    ],
+    "exec": "npm start:dev",
+    "ext": "ts"
   },
   "author": "julien.laloi@gmail.com",
   "license": "ISC",
@@ -29,15 +44,24 @@
     "youtube-player": "^5.5.2"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.17.1",
+    "@types/compression": "^1.0.1",
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.12.7",
+    "@types/request": "^2.48.3",
     "@vue/component-compiler-utils": "^3.0.2",
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-vue": "^5.2.3",
+    "nodemon": "^1.19.4",
     "parcel-bundler": "^1.12.4",
     "sass": "^1.23.3",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.7.2",
     "vue-hot-reload-api": "^2.3.4",
     "vue-resource": "^1.5.1",
     "vue-template-compiler": "^2.6.10"
