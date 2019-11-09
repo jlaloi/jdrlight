@@ -181,11 +181,20 @@ export default {
     margin: 0;
     vertical-align: middle;
     a {
-      line-height: 1em;
       vertical-align: middle;
+      width: 2em;
+      height: 1em;
+      display: inline-block;
+      text-align: left;
       img {
+        display: inline-block;
+        position: absolute;
         height: 1em;
+        border: $border;
         border-radius: 2px;
+      }
+      img:hover {
+        height: 10em;
       }
     }
   }
