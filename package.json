@@ -29,7 +29,7 @@
     "youtube-player": "^5.5.2"
   },
   "devDependencies": {
-    "@vue/component-compiler-utils": "^3.0.0",
+    "@vue/component-compiler-utils": "^3.0.2",
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",

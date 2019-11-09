@@ -171,16 +171,18 @@ export default {
     width: 16.5em;
   }
   .actions {
+    margin: 0;
     width: 6em;
     display: inline-block;
   }
   .sceneName {
-    width: 10em;
+    width: 11em;
     font-weight: bold;
     text-align: center;
   }
   .sceneOrder {
     width: 3em;
+    margin: 0;
   }
   .audio {
     margin: 0;

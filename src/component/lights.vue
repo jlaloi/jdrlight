@@ -61,6 +61,7 @@ export default {
 @import '../styles/config';
 #lights {
   border-top: $border;
+  max-width: 23em;
   select {
     margin: 0.5em auto 0.5em auto;
     width: 10em;

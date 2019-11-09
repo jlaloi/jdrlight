@@ -28,6 +28,7 @@ export async function createScene(scenarioId, order, name, music) {
         }
         const data = proxy.readQuery(query)
         data.allScenes.push(createScene)
+        data.allScenes.sort((a, b) => a.order - b.order)
         proxy.writeQuery({...query, data})
       },
     })
