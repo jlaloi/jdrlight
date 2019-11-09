@@ -40,12 +40,12 @@ const isLocalUrl = url => ips.find(ip => url.match(new RegExp(`^http?://${ip}?:(
 /*
  * Lookup
  */
-export const initLookUpCast = () => new Scanner(device => devices.set(device, undefined), {scanInterval: 0})
+export const initLookUpCast = () => new Scanner(device => devices.set(device.name, undefined), {scanInterval: 0})
 
-export const getCasts = () => [...devices.keys()].map(c => c.name)
+export const getCasts = () => [...devices.keys()]
 
 export const cast = async (deviceName, media, imgDir, serverHost) => {
-  if (media === 'off') return castStop(deviceName)
+  if (!media) return castStop(deviceName)
   if (imgDir && serverHost && !isLocalUrl(media)) {
     // Download local copie
     const fileName = media.substr(media.lastIndexOf('/') + 1)
@@ -63,20 +63,19 @@ export const cast = async (deviceName, media, imgDir, serverHost) => {
   const onConnect = async (device, mediaPlayer, resolve) => {
     await mediaPlayer.playUrlPromise(media)
     // await mediaPlayer.close();
-    resolve(media)
     startRefresh(deviceName, media, imgDir, serverHost)
+    resolve(media)
   }
   return castUpdate(deviceName, onConnect)
 }
 
 export const castStop = async deviceName => {
-  console.log(`Stop cast on ${deviceName}`)
   stopRefresh(deviceName)
   const onConnect = async (device, mediaPlayer, resolve) => {
     await mediaPlayer.close()
     await mediaPlayer.stopClientPromise()
-    device.set(deviceName, undefined)
-    resolve('off')
+    devices.set(deviceName, undefined)
+    resolve(null)
   }
   return castUpdate(deviceName, onConnect)
 }
@@ -85,21 +84,21 @@ const castUpdate = async (deviceName, onConnect) =>
   new Promise(async (resolve, reject) => {
     try {
       if (!devices.has(deviceName))
-        reject({
+        return reject({
           result: `Cast device ${deviceName} not found`,
         })
       const device = await ScannerPromise(deviceName)
       if (!device)
-        reject({
+        return reject({
           result: `Cast device ${deviceName} not connected`,
         })
       else {
         if (!devices.get(deviceName)) devices.set(deviceName, new MediaPlayer(device))
-        onConnect(device, devices.get(deviceName), resolve, reject)
+        return onConnect(device, devices.get(deviceName), resolve, reject)
       }
     } catch (err) {
       console.error(err)
-      reject({
+      return reject({
         result: err,
       })
     }

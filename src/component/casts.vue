@@ -1,11 +1,14 @@
 <template>
-  <div id="casts">
+  <div id="casts" class="deviceList">
     <!-- Add Cast -->
     <div v-if="loading">Loading</div>
-    <select v-else v-model="selectedCast.deviceId" :disabled="loading || castsSorted.length === 0" @change="onChange">
-      <option />
-      <option v-for="(l, index) in castsSorted" :key="index" :value="l">{{ l }}</option>
-    </select>
+    <div v-else class="list">
+      <select v-model="selectedCast.deviceId" :disabled="loading || castsSorted.length === 0" @change="onChange">
+        <option />
+        <option v-for="(l, index) in castsSorted" :key="index" :value="l">{{ l }}</option>
+      </select>
+      <i class="material-icons">cast</i>
+    </div>
     <p v-if="error">An error occured: {{ error }}</p>
     <!-- Cast List -->
     <cast v-for="c in allCasts" :key="c.id" :cast="c"></cast>
@@ -58,15 +61,3 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped>
-@import '../styles/config';
-#casts {
-  border-top: $border;
-  max-width: 23em;
-  select {
-    margin: 0.5em auto 0.5em auto;
-    width: 10em;
-    display: block;
-  }
-}
-</style>

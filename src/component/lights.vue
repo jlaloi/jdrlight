@@ -1,11 +1,14 @@
 <template>
-  <div id="lights">
+  <div id="ligths" class="deviceList">
     <!-- Add Light -->
     <div v-if="loading">Loading</div>
-    <select v-if="!loading" v-model="selectedLight" :disabled="loading || lightsSorted.length === 0" @change="onChange">
-      <option />
-      <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.name || l.deviceId }}</option>
-    </select>
+    <div v-else class="list">
+      <select v-model="selectedLight" :disabled="loading || lightsSorted.length === 0" @change="onChange">
+        <option />
+        <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.name || l.deviceId }}</option>
+      </select>
+      <i class="material-icons">lightbulb_outline</i>
+    </div>
     <p v-if="error">An error occured: {{ error }}</p>
     <!-- Light  List -->
     <light v-for="l in allLights" :key="l.id" :light="l"></light>
@@ -57,15 +60,3 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped>
-@import '../styles/config';
-#lights {
-  border-top: $border;
-  max-width: 23em;
-  select {
-    margin: 0.5em auto 0.5em auto;
-    width: 10em;
-    display: block;
-  }
-}
-</style>

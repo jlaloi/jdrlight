@@ -6,7 +6,7 @@
       <template slot-scope="{mutate, loading, error}">
         <!-- Media -->
         <select v-model="image" @change="imageSelected()">
-          <option />
+          <option :value="null" />
           <option v-for="(l, index) in imagesSorted" :key="index" :value="serverUrl + l">{{ l }}</option>
         </select>
         <input v-model="media" type="text" placeholder="url" />
@@ -16,6 +16,7 @@
           <a v-if="media" :href="media" :title="media" target="_blank">
             <img :src="media" />
           </a>
+          <i v-else class="material-icons warning" title="OFF">cast_off</i>
           <i class="material-icons clickable" :class="{rotating: testLoading}" @click="testCast()"
             >play_circle_outline</i
           >
@@ -80,7 +81,7 @@ export default {
     async testCast() {
       this.testLoading = true
       try {
-        const mediaCasted = (await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)).body
+        const {body: mediaCasted} = await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)
         if (mediaCasted !== this.media) {
           this.media = mediaCasted
           this.$store.dispatch('fetchImages')
@@ -178,13 +179,14 @@ export default {
     text-align: center;
     margin-top: 0.25em;
     margin: 0;
-    .material-icons {
-      vertical-align: top;
-    }
-    img {
-      margin-right: 0.25em;
-      height: 24px;
-      border-radius: 2px;
+    vertical-align: middle;
+    a {
+      line-height: 1em;
+      vertical-align: middle;
+      img {
+        height: 1em;
+        border-radius: 2px;
+      }
     }
   }
 }
