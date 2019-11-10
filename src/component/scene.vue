@@ -45,7 +45,7 @@
             </select>
             <input v-model="music" type="text" placeholder="YT id / URL" />
             <i
-              title="Toggle show Audio Player"
+              title="Toggle Audio Player"
               v-if="music"
               class="material-icons clickable inputToggle"
               @click="showAudioToggle"
@@ -266,7 +266,8 @@ export default {
       margin: 0.25em;
     }
     input {
-      width: 12.5em;
+      width: 11em;
+      padding-right: 1.5em;
     }
     select {
       width: 6em;
