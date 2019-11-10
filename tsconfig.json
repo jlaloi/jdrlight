@@ -8,5 +8,5 @@
     "lib": ["es2019", "dom"]
   },
   "include": ["app/**/*.ts"],
-  "exclude": ["node_modules", "src", ".vscode"]
+  "exclude": ["node_modules", ".vscode"]
 }
