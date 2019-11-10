@@ -72,6 +72,7 @@ select:disabled {
 
 .logo {
   color: $color2;
+  cursor: help;
 }
 
 .deviceList {
@@ -81,9 +82,6 @@ select:disabled {
   .list {
     select {
       width: 10em;
-    }
-    .material-icons {
-      color: $color2;
     }
   }
 }

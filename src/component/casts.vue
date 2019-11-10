@@ -7,7 +7,7 @@
         <option />
         <option v-for="(l, index) in castsSorted" :key="index" :value="l">{{ l }}</option>
       </select>
-      <i class="material-icons">photo</i>
+      <i class="material-icons logo" title="Picture">photo</i>
     </div>
     <p v-if="error">An error occured: {{ error }}</p>
     <!-- Cast List -->

@@ -7,7 +7,7 @@
         <option />
         <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.name || l.deviceId }}</option>
       </select>
-      <i class="material-icons">lightbulb_outline</i>
+      <i class="material-icons logo" title="Light">lightbulb_outline</i>
     </div>
     <p v-if="error">An error occured: {{ error }}</p>
     <!-- Light  List -->
