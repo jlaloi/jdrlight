@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as castv2 from 'castv2-player'
 import * as fs from 'fs'
 import * as request from 'request-promise'
@@ -40,7 +41,7 @@ const isLocalUrl = (url: string) => ips.find(ip => url.match(new RegExp(`^http?:
 /*
  * Lookup
  */
-export const initLookUpCast = () => new Scanner(device => devices.set(device.name, undefined), {scanInterval: 0})
+export const initLookUpCast = () => new Scanner((device: any) => devices.set(device.name, undefined), {scanInterval: 0})
 
 export const getCasts = () => [...devices.keys()]
 
@@ -59,7 +60,7 @@ export const cast = async (deviceName: string, media: string, imgDir: string, se
       }
     }
   }
-  const onConnect = async (device, mediaPlayer) => {
+  const onConnect = async (device: any, mediaPlayer: any) => {
     await mediaPlayer.playUrlPromise(media)
     startRefresh(deviceName, media, imgDir, serverHost)
     return media
@@ -69,7 +70,7 @@ export const cast = async (deviceName: string, media: string, imgDir: string, se
 
 export const castStop = async (deviceName: string) => {
   stopRefresh(deviceName)
-  const onConnect = async (device, mediaPlayer) => {
+  const onConnect = async (device: any, mediaPlayer: any) => {
     await mediaPlayer.close()
     await mediaPlayer.stopClientPromise()
     devices.set(deviceName, undefined)
@@ -78,7 +79,7 @@ export const castStop = async (deviceName: string) => {
   return castUpdate(deviceName, onConnect)
 }
 
-const castUpdate = async (deviceName: string, onConnect) => {
+const castUpdate = async (deviceName: string, onConnect: Function) => {
   try {
     if (!devices.has(deviceName)) throw Error(`Cast device ${deviceName} not found`)
     const device = await ScannerPromise(deviceName)
