@@ -1,6 +1,6 @@
-import {CREATE_SCENE, GET_SCENES, CREATE_CAST, GET_CASTS, CREATE_LIGHT, GET_LIGHTS} from './graph.js'
+import {CREATE_SCENE, GET_SCENES, CREATE_CAST, GET_CASTS, CREATE_LIGHT, GET_LIGHTS} from './graph'
 
-export async function createScene(scenarioId, order, name, music) {
+export async function createScene(scenarioId: string, order: number, name: string, music: string) {
   this.loading = true
   this.error = undefined
   try {
@@ -14,12 +14,7 @@ export async function createScene(scenarioId, order, name, music) {
         music,
         order,
       },
-      update(
-        proxy,
-        {
-          data: {createScene},
-        },
-      ) {
+      update(proxy, {data: {createScene}}) {
         const query = {
           query: GET_SCENES,
           variables: {
@@ -39,7 +34,7 @@ export async function createScene(scenarioId, order, name, music) {
   }
 }
 
-export async function createCast(sceneId, deviceId, media) {
+export async function createCast(sceneId: string, deviceId: string, media: string) {
   this.loading = true
   this.error = undefined
   try {
@@ -48,12 +43,7 @@ export async function createCast(sceneId, deviceId, media) {
     } = await this.$apollo.mutate({
       mutation: CREATE_CAST,
       variables: {deviceId, media, sceneId},
-      update(
-        proxy,
-        {
-          data: {createCast},
-        },
-      ) {
+      update(proxy, {data: {createCast}}) {
         const query = {
           query: GET_CASTS,
           variables: {
@@ -72,7 +62,7 @@ export async function createCast(sceneId, deviceId, media) {
   }
 }
 
-export async function createLight(sceneId, deviceId, power, bright, rgb) {
+export async function createLight(sceneId: string, deviceId: string, power: string, bright: number, rgb: number[]) {
   this.loading = true
   this.error = undefined
   try {
@@ -81,12 +71,7 @@ export async function createLight(sceneId, deviceId, power, bright, rgb) {
     } = await this.$apollo.mutate({
       mutation: CREATE_LIGHT,
       variables: {sceneId, deviceId, power, bright, rgb},
-      update(
-        proxy,
-        {
-          data: {createLight},
-        },
-      ) {
+      update(proxy, {data: {createLight}}) {
         const query = {
           query: GET_LIGHTS,
           variables: {

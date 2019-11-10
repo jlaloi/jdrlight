@@ -37,8 +37,8 @@
 
 <script>
 import HTTP from '../config/http'
-import {DELETE_CAST, UPDATE_CAST, GET_CASTS} from '../config/graph.js'
-import {serverUrl} from '../config/router.js'
+import {DELETE_CAST, UPDATE_CAST, GET_CASTS} from '../config/graph'
+import {serverUrl} from '../config/router'
 
 export default {
   name: 'Cast',

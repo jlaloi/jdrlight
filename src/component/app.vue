@@ -10,9 +10,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {routes} from '../config/router'
-import lookup from './lookup'
+import lookup from './lookup.vue'
 
 export default {
   name: 'App',

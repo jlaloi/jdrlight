@@ -34,7 +34,7 @@
 
 <script>
 import HTTP from '../config/http'
-import {DELETE_LIGHT, UPDATE_LIGHT, GET_LIGHTS} from '../config/graph.js'
+import {DELETE_LIGHT, UPDATE_LIGHT, GET_LIGHTS} from '../config/graph'
 
 export default {
   name: 'Light',

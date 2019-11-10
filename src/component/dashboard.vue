@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {ALL_DASHBOARD} from '../config/graph.js'
+import {ALL_DASHBOARD} from '../config/graph'
 import HTTP from '../config/http'
 import audioPlayer from './audioPlayer'
 

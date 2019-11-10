@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {ALL_SCENARIOS, CREATE_SCENARIO, DELETE_SCENARIO} from '../config/graph.js'
+import {ALL_SCENARIOS, CREATE_SCENARIO, DELETE_SCENARIO} from '../config/graph'
 
 export default {
   name: 'Scenarios',

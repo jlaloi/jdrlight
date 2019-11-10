@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {GET_SCENARIO, UPDATE_SCENARIO} from '../config/graph.js'
+import {GET_SCENARIO, UPDATE_SCENARIO} from '../config/graph'
 import scenes from './scenes'
 
 export default {
