@@ -10,10 +10,11 @@ import {clearObject, exportJSON} from '../config/misc'
 
 export default {
   name: 'ImportJSON',
-  props: ['export', 'exportName', 'onImport'],
+  props: ['getExport', 'exportName', 'onImport'],
   methods: {
-    doExport() {
-      exportJSON(clearObject(this.export), this.exportName)
+    async doExport() {
+      const toExport = await this.getExport()
+      exportJSON(clearObject(toExport), this.exportName)
     },
     doImport(event) {
       const reader = new FileReader()
