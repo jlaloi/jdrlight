@@ -1,5 +1,5 @@
 <template>
-  <div id="scene">
+  <div id="scene" v-bind:class="{dragStart: isDragStart, dragEnter: isDragEnter}">
     <ApolloMutation
       :mutation="updateScene"
       :variables="{id: scene.id, name, music, order: Number(order)}"
@@ -12,9 +12,25 @@
           <input v-model="order" type="number" placeholder="Order" class="sceneOrder" />
           <!-- Actions -->
           <div class="actions">
-            <i v-if="!loading" class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
-            <i class="material-icons clickable" title="duplicate" @click="duplicate()">content_copy</i>
+            <i title="Save" v-if="!loading" class="material-icons clickable" :class="{unsaved}" @click="mutate()"
+              >save</i
+            >
             <i
+              title="Change order (drag to other drag icon)"
+              class="material-icons draggable"
+              height="40px"
+              draggable="true"
+              v-on:dragstart="dragStart($event)"
+              v-on:drop="dragDrop($event)"
+              v-on:dragend="dragEnd()"
+              v-on:dragenter="dragEnter()"
+              v-on:dragleave="dragLeave()"
+              v-on:dragover="dragOver()"
+              >open_with</i
+            >
+            <i title="Duplicate" class="material-icons clickable" @click="duplicate()">content_copy</i>
+            <i
+              title="Delete"
               v-if="!deleteLoading"
               class="material-icons clickable"
               @click="confirm(`Delete ${scene.name}?`) && delScene()"
@@ -29,7 +45,7 @@
             </select>
             <input v-model="music" type="text" placeholder="YT id / URL" />
             <i class="material-icons logo" title="Audio">music_note</i>
-            <audio-player v-if="music" :key="music" config="true" :music="music"></audio-player>
+            <audio-player ref="audioPlayer" v-if="music" :key="music" config="true" :music="music"></audio-player>
           </div>
           <!-- Casts -->
           <casts :scene-id="scene.id"></casts>
@@ -47,7 +63,7 @@ import audioPlayer from './audioPlayer'
 import lights from './lights'
 import casts from './casts'
 import {UPDATE_SCENE, DELETE_SCENE, GET_SCENES} from '../config/graph'
-import {duplicateScene} from '../config/duplicate'
+import {duplicateScene, updateSceneOrder} from '../config/duplicate'
 
 export default {
   name: 'Scene',
@@ -65,6 +81,8 @@ export default {
       music: undefined,
       deleteLoading: false,
       deleteError: undefined,
+      isDragStart: false,
+      isDragEnter: false,
     }
   },
   computed: {
@@ -83,7 +101,7 @@ export default {
   },
   methods: {
     reset() {
-      ({name: this.name, music: this.music, order: this.order} = this.scene)
+      ;({name: this.name, music: this.music, order: this.order} = this.scene)
     },
     update(
       proxy,
@@ -145,6 +163,38 @@ export default {
     async duplicate() {
       await duplicateScene.bind(this)(this.scene)
     },
+    dragStart(event) {
+      const payload = JSON.stringify({id: this.scene.id, order: this.scene.order})
+      event.dataTransfer.setData('scene', payload)
+      this.isDragStart = true
+    },
+    async dragDrop(event) {
+      event.preventDefault()
+      this.isDragEnter = false
+      const {id, order} = JSON.parse(event.dataTransfer.getData('scene'))
+      if (id === this.scene.id) return
+      const newOrder = this.scene.order < order ? this.scene.order - 1 : this.scene.order + 1
+      await updateSceneOrder.bind(this)(id, newOrder)
+    },
+    dragEnd() {
+      this.isDragStart = false
+    },
+    dragEnter() {
+      this.isDragEnter = true
+    },
+    dragLeave() {
+      this.isDragEnter = false
+    },
+    dragOver() {
+      event.preventDefault()
+    },
+  },
+  watch: {
+    'scene.order'() {
+      this.order = this.scene.order
+      // YT BUG...
+      if (this.scene.music && this.$refs.audioPlayer) this.$refs.audioPlayer.forceRefresh()
+    },
   },
 }
 </script>
@@ -173,11 +223,11 @@ export default {
   }
   .actions {
     margin: 0;
-    width: 6em;
+    width: 7em;
     display: inline-block;
   }
   .sceneName {
-    width: 11em;
+    width: 10em;
     font-weight: bold;
     text-align: center;
   }

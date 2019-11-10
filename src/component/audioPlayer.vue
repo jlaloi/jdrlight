@@ -55,6 +55,13 @@ export default {
     this.initPlayer()
   },
   methods: {
+    forceRefresh() {
+      if (!this.isAudioFile && this.youTubePlayer) {
+        this.youTubePlayer.destroy()
+        this.youTubePlayer = undefined
+        this.$nextTick(this.initVideo)
+      }
+    },
     isFile(music) {
       return music && music.indexOf('.') !== -1
     },

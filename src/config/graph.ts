@@ -100,6 +100,20 @@ export const UPDATE_SCENE = gql`
   }
 `
 
+export const UPDATE_SCENE_ORDER = gql`
+  mutation($id: ID!, $order: Int) {
+    updateScene(id: $id, order: $order) {
+      id
+      name
+      order
+      music
+      scenario {
+        id
+      }
+    }
+  }
+`
+
 export const SCENE_COMPLETE = gql`
   query($id: ID!) {
     Scene(id: $id) {

@@ -1,4 +1,4 @@
-import {CREATE_SCENE, GET_SCENES, CREATE_CAST, GET_CASTS, CREATE_LIGHT, GET_LIGHTS} from './graph'
+import {CREATE_SCENE, GET_SCENES, CREATE_CAST, GET_CASTS, CREATE_LIGHT, GET_LIGHTS, UPDATE_SCENE_ORDER} from './graph'
 
 export async function createScene(scenarioId: string, order: number, name: string, music: string) {
   this.loading = true
@@ -29,6 +29,39 @@ export async function createScene(scenarioId: string, order: number, name: strin
     })
     this.loading = false
     return createScene
+  } catch (error) {
+    this.error = error
+  }
+}
+
+export async function updateSceneOrder(id: string, order: number) {
+  this.loading = true
+  this.error = undefined
+  try {
+    const {
+      data: {updateScene},
+    } = await this.$apollo.mutate({
+      mutation: UPDATE_SCENE_ORDER,
+      variables: {
+        id,
+        order,
+      },
+      update(proxy, {data: {updateScene}}) {
+        const query = {
+          query: GET_SCENES,
+          variables: {
+            scenario: updateScene.scenario.id,
+          },
+        }
+        const data = proxy.readQuery(query)
+        const sceneIndex = data.allScenes.findIndex(s => s.id === id)
+        data.allScenes[sceneIndex] = updateScene
+        data.allScenes.sort((a, b) => a.order - b.order)
+        proxy.writeQuery({...query, data})
+      },
+    })
+    this.loading = false
+    return updateScene
   } catch (error) {
     this.error = error
   }
