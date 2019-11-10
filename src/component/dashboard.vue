@@ -8,7 +8,26 @@
     </select>
     <!-- Scene list -->
     <div v-if="scenario">
-      <a v-for="s in scenario.scenes" :key="s.id" @click="playScene(s)">{{ s.name }}</a>
+      <a v-for="s in scenario.scenes" :key="s.id" @click="playScene(s)">
+        {{ s.name }}
+        <span class="actions">
+          <i v-if="s.music" class="material-icons logo">music_note</i>
+          <i
+            v-for="c in s.casts"
+            :key="c.id"
+            class="material-icons"
+            :class="[c.media === null ? 'warning' : 'logo']"
+            >photo</i
+          >
+          <i
+            v-for="l in s.lights"
+            :key="l.id"
+            :style="{color: 'rgb(' + l.rgb[0] + ',' + l.rgb[1] + ',' + l.rgb[2] + ')'}"
+            class="material-icons"
+            >lightbulb_outline</i
+          >
+        </span>
+      </a>
     </div>
     <!--Player(s) -->
     <audio-player v-if="music" :music="music" :on-playing="onMusicPlaying"></audio-player>
@@ -79,6 +98,10 @@ export default {
       text-align: center;
       display: inline-grid;
       margin: 0.5em;
+      .actions {
+        display: inline;
+        font-size: 0.5em;
+      }
     }
     a:hover {
       background-color: #111;
