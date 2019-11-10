@@ -44,8 +44,22 @@
               <option v-for="(m, index) in $store.state.musics" :key="index">{{ m }}</option>
             </select>
             <input v-model="music" type="text" placeholder="YT id / URL" />
+            <i
+              title="Toggle show Audio Player"
+              v-if="music"
+              class="material-icons clickable inputToggle"
+              @click="showAudioToggle"
+              v-bind:class="{warning: !showAudio}"
+              >{{ showAudio ? 'arrow_drop_up' : 'arrow_drop_down' }}
+            </i>
             <i class="material-icons logo" title="Audio">music_note</i>
-            <audio-player ref="audioPlayer" v-if="music" :key="music" config="true" :music="music"></audio-player>
+            <audio-player
+              ref="audioPlayer"
+              v-if="showAudio && music"
+              :key="music"
+              config="true"
+              :music="music"
+            ></audio-player>
           </div>
           <!-- Casts -->
           <casts :scene-id="scene.id"></casts>
@@ -83,6 +97,7 @@ export default {
       deleteError: undefined,
       isDragStart: false,
       isDragEnter: false,
+      showAudio: false,
     }
   },
   computed: {
@@ -188,6 +203,9 @@ export default {
     dragOver() {
       event.preventDefault()
     },
+    showAudioToggle() {
+      this.showAudio = !this.showAudio
+    },
   },
   watch: {
     'scene.order'() {
@@ -234,6 +252,10 @@ export default {
   .sceneOrder {
     width: 3em;
     margin: 0;
+  }
+  .inputToggle {
+    margin-left: -1.3em;
+    margin-top: -0.2em;
   }
   .audio {
     margin: 0;
