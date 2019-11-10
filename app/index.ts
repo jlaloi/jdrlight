@@ -10,7 +10,6 @@ const PORT = 9090
 const DIR_PUBLIC = 'public/'
 const DIR_MUSIC = 'music/'
 const DIR_IMG = 'image/'
-const DIR_FONTS = 'node_modules/material-design-icons/iconfont'
 
 const initLookup = () => {
   initLookUpLight()
@@ -68,7 +67,6 @@ app.delete('/cast/:deviceId', async (req: express.Request, res: express.Response
 })
 
 app.use(express.static(DIR_PUBLIC))
-app.use('/fonts', express.static(DIR_FONTS))
 app.get('/musics', async (req: express.Request, res: express.Response) =>
   res.json(await readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC)),
 )

@@ -7,17 +7,20 @@
     </p>
     <router-view></router-view>
     <lookup></lookup>
+    <host-warn></host-warn>
   </div>
 </template>
 
 <script lang="ts">
 import {routes} from '../config/router'
 import lookup from './lookup.vue'
+import hostWarn from './hostWarn.vue'
 
 export default {
   name: 'App',
   components: {
     lookup,
+    hostWarn,
   },
   computed: {
     routes() {
