@@ -21,15 +21,15 @@ const app = express()
 app.use(compression({filter: () => true}))
 app.use(bodyParser.json())
 
-app.get('/lookup', (req, res) => {
+app.get('/lookup', (req: express.Request, res: express.Response) => {
   initLookup()
   return res.json({
     result: 'ok',
   })
 })
 
-app.get('/light', (req, res) => res.json(getLights()))
-app.post('/light/:deviceId', async (req, res) => {
+app.get('/light', (req: express.Request, res: express.Response) => res.json(getLights()))
+app.post('/light/:deviceId', async (req: express.Request, res: express.Response) => {
   try {
     const scene = req.body
     if (scene.power) return res.json(await setPower(req.params.deviceId, scene.power))
@@ -41,8 +41,8 @@ app.post('/light/:deviceId', async (req, res) => {
   }
 })
 
-app.get('/cast', (req, res) => res.json(getCasts()))
-app.post('/cast/:deviceId', async (req, res) => {
+app.get('/cast', (req: express.Request, res: express.Response) => res.json(getCasts()))
+app.post('/cast/:deviceId', async (req: express.Request, res: express.Response) => {
   try {
     return res.json(
       await cast(
@@ -58,7 +58,7 @@ app.post('/cast/:deviceId', async (req, res) => {
   }
 })
 
-app.delete('/cast/:deviceId', async (req, res) => {
+app.delete('/cast/:deviceId', async (req: express.Request, res: express.Response) => {
   try {
     return res.json(await castStop(req.params.deviceId))
   } catch (error) {
@@ -69,7 +69,9 @@ app.delete('/cast/:deviceId', async (req, res) => {
 
 app.use(express.static(DIR_PUBLIC))
 app.use('/fonts', express.static(DIR_FONTS))
-app.get('/musics', async (req, res) => res.json(await readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC)))
+app.get('/musics', async (req: express.Request, res: express.Response) =>
+  res.json(await readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC)),
+)
 
 const readDir = async (path: string, prefix: string) => {
   const result = []
@@ -81,7 +83,9 @@ const readDir = async (path: string, prefix: string) => {
   return result
 }
 
-app.get('/images', async (req, res) => res.json(await readDir(DIR_PUBLIC + DIR_IMG, DIR_IMG)))
+app.get('/images', async (req: express.Request, res: express.Response) =>
+  res.json(await readDir(DIR_PUBLIC + DIR_IMG, DIR_IMG)),
+)
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`))
 
 initLookup()
