@@ -15,17 +15,27 @@
     </ApolloMutation>
     <!-- Scene List -->
     <scenes v-if="!$apollo.loading" :scenario-id="id"></scenes>
+    <!---  Import / Export -->
+    <import-export
+      v-if="!$apollo.loading"
+      :export="Scenario"
+      :export-name="Scenario.name"
+      :onImport="importScenario"
+    ></import-export>
   </div>
 </template>
 
 <script>
-import {GET_SCENARIO, UPDATE_SCENARIO} from '../config/graph'
+import {FULL_SCENARIO, UPDATE_SCENARIO} from '../config/graph'
+import {importScene} from '../config/duplicate'
 import scenes from './scenes'
+import importExport from './importExport'
 
 export default {
   name: 'Scenario',
   components: {
     scenes,
+    importExport,
   },
   data() {
     return {
@@ -43,10 +53,14 @@ export default {
     onDone() {
       this.toggleChangeName = !this.toggleChangeName
     },
+    async importScenario(data) {
+      if (window.confirm(`Import ${data.scenes.length} scene(s)?`))
+        for await (const scene of data.scenes) importScene.bind(this)(scene, this.Scenario.id)
+    },
   },
   apollo: {
     Scenario: {
-      query: GET_SCENARIO,
+      query: FULL_SCENARIO,
       variables() {
         return {
           id: this.id,

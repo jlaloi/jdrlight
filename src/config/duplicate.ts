@@ -147,3 +147,10 @@ export async function duplicateScene(scene) {
   })
   for await (const cast of allCasts) createCast.bind(this)(sceneId, cast.deviceId, cast.media)
 }
+
+export async function importScene(scene, scenarioId) {
+  const {id: sceneId} = await createScene.bind(this)(scenarioId, scene.order, scene.name, scene.music)
+  for await (const light of scene.lights)
+    createLight.bind(this)(sceneId, light.deviceId, light.power, light.bright, light.rgb)
+  for await (const cast of scene.casts) createCast.bind(this)(sceneId, cast.deviceId, cast.media)
+}

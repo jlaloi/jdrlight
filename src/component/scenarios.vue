@@ -47,22 +47,12 @@ export default {
     onDone() {
       this.name = undefined
     },
-    updateCreate(
-      proxy,
-      {
-        data: {createScenario},
-      },
-    ) {
+    updateCreate(proxy, {data: {createScenario}}) {
       const data = proxy.readQuery({query: ALL_SCENARIOS})
       data.allScenarios.push(createScenario)
       proxy.writeQuery({query: ALL_SCENARIOS, data})
     },
-    updateDelete(
-      store,
-      {
-        data: {deleteScenario},
-      },
-    ) {
+    updateDelete(store, {data: {deleteScenario}}) {
       const query = {query: ALL_SCENARIOS}
       const {allScenarios} = store.readQuery({query: ALL_SCENARIOS})
       store.writeQuery({

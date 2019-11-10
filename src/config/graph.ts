@@ -29,6 +29,30 @@ export const GET_SCENARIO = gql`
   }
 `
 
+export const FULL_SCENARIO = gql`
+  query($id: ID!) {
+    Scenario(id: $id) {
+      id
+      name
+      scenes(orderBy: order_ASC) {
+        name
+        music
+        order
+        lights {
+          deviceId
+          power
+          bright
+          rgb
+        }
+        casts {
+          deviceId
+          media
+        }
+      }
+    }
+  }
+`
+
 export const CREATE_SCENARIO = gql`
   mutation($name: String!) {
     createScenario(name: $name) {
