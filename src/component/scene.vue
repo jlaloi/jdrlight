@@ -1,5 +1,5 @@
 <template>
-  <div id="scene" v-bind:class="{dragStart: isDragStart, dragEnter: isDragEnter}">
+  <div id="scene" :class="{dragStart: isDragStart, dragEnter: isDragEnter}">
     <ApolloMutation
       :mutation="updateScene"
       :variables="{id: scene.id, name, music, order: Number(order)}"
@@ -12,7 +12,7 @@
           <input v-model="order" type="number" placeholder="Order" class="sceneOrder" />
           <!-- Actions -->
           <div class="actions">
-            <i title="Save" v-if="!loading" class="material-icons clickable" :class="{unsaved}" @click="mutate()"
+            <i v-if="!loading" title="Save" class="material-icons clickable" :class="{unsaved}" @click="mutate()"
               >save</i
             >
             <i
@@ -20,18 +20,18 @@
               class="material-icons draggable"
               height="40px"
               draggable="true"
-              v-on:dragstart="dragStart($event)"
-              v-on:drop="dragDrop($event)"
-              v-on:dragend="dragEnd()"
-              v-on:dragenter="dragEnter()"
-              v-on:dragleave="dragLeave()"
-              v-on:dragover="dragOver()"
+              @dragstart="dragStart($event)"
+              @drop="dragDrop($event)"
+              @dragend="dragEnd()"
+              @dragenter="dragEnter()"
+              @dragleave="dragLeave()"
+              @dragover="dragOver()"
               >open_with</i
             >
             <i title="Duplicate" class="material-icons clickable" @click="duplicate()">content_copy</i>
             <i
-              title="Delete"
               v-if="!deleteLoading"
+              title="Delete"
               class="material-icons clickable"
               @click="confirm(`Delete ${scene.name}?`) && delScene()"
               >delete</i
@@ -45,17 +45,17 @@
             </select>
             <input v-model="music" type="text" placeholder="YT id / URL" />
             <i
-              title="Toggle Audio Player"
               v-if="music"
+              title="Toggle Audio Player"
               class="material-icons clickable inputToggle"
+              :class="{warning: !showAudio}"
               @click="showAudioToggle"
-              v-bind:class="{warning: !showAudio}"
               >{{ showAudio ? 'arrow_drop_up' : 'arrow_drop_down' }}
             </i>
             <i class="material-icons logo" title="Audio">music_note</i>
             <audio-player
-              ref="audioPlayer"
               v-if="showAudio && music"
+              ref="audioPlayer"
               :key="music"
               config="true"
               :music="music"
@@ -111,12 +111,19 @@ export default {
       return this.name !== this.scene.name || this.music != this.scene.music || this.order != this.scene.order
     },
   },
+  watch: {
+    'scene.order'() {
+      this.order = this.scene.order
+      // YT BUG...
+      if (this.scene.music && this.$refs.audioPlayer) this.$refs.audioPlayer.forceRefresh()
+    },
+  },
   mounted() {
     this.reset()
   },
   methods: {
     reset() {
-      ;({name: this.name, music: this.music, order: this.order} = this.scene)
+      ({name: this.name, music: this.music, order: this.order} = this.scene)
     },
     update(
       proxy,
@@ -205,13 +212,6 @@ export default {
     },
     showAudioToggle() {
       this.showAudio = !this.showAudio
-    },
-  },
-  watch: {
-    'scene.order'() {
-      this.order = this.scene.order
-      // YT BUG...
-      if (this.scene.music && this.$refs.audioPlayer) this.$refs.audioPlayer.forceRefresh()
     },
   },
 }
