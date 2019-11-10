@@ -14,26 +14,20 @@ export const getLights = () =>
 
 export const getLight = (deviceId: string) => look.getLights().find(l => l.id === deviceId)
 
-export const updateLight = (fct, deviceId: string) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const light = getLight(deviceId)
-      if (light) {
-        resolve({
-          result: 'success',
-          light: await fct(light),
-        })
-      } else
-        resolve({
-          result: `light ${deviceId} not found`,
-        })
-    } catch (err) {
-      console.error(err)
-      reject({
-        result: err,
-      })
-    }
-  })
+export const updateLight = async (fct, deviceId: string) => {
+  try {
+    const light = getLight(deviceId)
+    if (light)
+      return {
+        result: 'success',
+        light: await fct(light),
+      }
+    else throw Error(`light ${deviceId} not found`)
+  } catch (error) {
+    console.error(error)
+    throw Error(error)
+  }
+}
 
 export const setBright = (id: string, value: number) => updateLight(light => light.setBright(value), id)
 export const setPower = (id: string, value: string) => updateLight(light => light.setPower(value), id)

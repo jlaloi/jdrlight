@@ -81,7 +81,9 @@ export default {
     async testCast() {
       this.testLoading = true
       try {
-        const {body: mediaCasted} = await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)
+        const {
+          body: {result: mediaCasted},
+        } = await HTTP.post(`/cast/${this.cast.deviceId}`, this.getConfig)
         if (mediaCasted !== this.media) {
           this.media = mediaCasted
           this.$store.dispatch('fetchImages')

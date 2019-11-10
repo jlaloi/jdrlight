@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 
 app.get('/lookup', (req, res) => {
   initLookup()
-  res.json({
+  return res.json({
     result: 'ok',
   })
 })
@@ -32,22 +32,19 @@ app.get('/light', (req, res) => res.json(getLights()))
 app.post('/light/:deviceId', async (req, res) => {
   try {
     const scene = req.body
-    if (scene.power) await setPower(req.params.deviceId, scene.power)
-    if (scene.rgb) await setRGB(req.params.deviceId, scene.rgb)
-    if (scene.bright) await setBright(req.params.deviceId, Number(scene.bright))
-    res.json({
-      result: 'ok',
-    })
+    if (scene.power) return res.json(await setPower(req.params.deviceId, scene.power))
+    if (scene.rgb) return res.json(await setRGB(req.params.deviceId, scene.rgb))
+    if (scene.bright) return res.json(await setBright(req.params.deviceId, Number(scene.bright)))
   } catch (error) {
-    console.log(error)
-    res.json(error)
+    console.error(error)
+    return res.status(500).json({error: error.message})
   }
 })
 
 app.get('/cast', (req, res) => res.json(getCasts()))
 app.post('/cast/:deviceId', async (req, res) => {
   try {
-    res.json(
+    return res.json(
       await cast(
         req.params.deviceId,
         req.body.media,
@@ -56,17 +53,17 @@ app.post('/cast/:deviceId', async (req, res) => {
       ),
     )
   } catch (error) {
-    console.log(error)
-    res.json(error)
+    console.error(error)
+    return res.status(500).json({error: error.message})
   }
 })
 
 app.delete('/cast/:deviceId', async (req, res) => {
   try {
-    res.json(await castStop(req.params.deviceId))
+    return res.json(await castStop(req.params.deviceId))
   } catch (error) {
-    console.log(error)
-    res.json(error)
+    console.error(error)
+    return res.status(500).json({error: error.message})
   }
 })
 

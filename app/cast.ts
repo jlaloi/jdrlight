@@ -1,6 +1,6 @@
 import * as castv2 from 'castv2-player'
 import * as fs from 'fs'
-import * as request from 'request'
+import * as request from 'request-promise'
 import * as os from 'os'
 
 const Scanner = castv2.Scanner()
@@ -59,53 +59,41 @@ export const cast = async (deviceName: string, media: string, imgDir: string, se
       }
     }
   }
-  const onConnect = async (device, mediaPlayer, resolve) => {
+  const onConnect = async (device, mediaPlayer) => {
     await mediaPlayer.playUrlPromise(media)
     startRefresh(deviceName, media, imgDir, serverHost)
-    resolve(media)
+    return media
   }
   return castUpdate(deviceName, onConnect)
 }
 
 export const castStop = async (deviceName: string) => {
   stopRefresh(deviceName)
-  const onConnect = async (device, mediaPlayer, resolve) => {
+  const onConnect = async (device, mediaPlayer) => {
     await mediaPlayer.close()
     await mediaPlayer.stopClientPromise()
     devices.set(deviceName, undefined)
-    resolve(null)
+    return null
   }
   return castUpdate(deviceName, onConnect)
 }
 
-const castUpdate = async (deviceName: string, onConnect) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      if (!devices.has(deviceName))
-        return reject({
-          result: `Cast device ${deviceName} not found`,
-        })
-      const device = await ScannerPromise(deviceName)
-      if (!device)
-        return reject({
-          result: `Cast device ${deviceName} not connected`,
-        })
-      else {
-        if (!devices.get(deviceName)) devices.set(deviceName, new MediaPlayer(device))
-        return onConnect(device, devices.get(deviceName), resolve, reject)
-      }
-    } catch (err) {
-      console.error(err)
-      return reject({
-        result: err,
-      })
+const castUpdate = async (deviceName: string, onConnect) => {
+  try {
+    if (!devices.has(deviceName)) throw Error(`Cast device ${deviceName} not found`)
+    const device = await ScannerPromise(deviceName)
+    if (!device) throw Error(`Cast device ${deviceName} not connected`)
+    else {
+      if (!devices.get(deviceName)) devices.set(deviceName, new MediaPlayer(device))
+      return {result: await onConnect(device, devices.get(deviceName))}
     }
-  })
+  } catch (error) {
+    console.error(error)
+    throw Error(error)
+  }
+}
 
-export const download = (url: string, target: string) =>
-  new Promise((resolve, reject) => {
-    request(url)
-      .pipe(fs.createWriteStream(target))
-      .on('error', error => reject(error))
-      .on('close', () => resolve(target))
-  })
+export const download = async (uri: string, outputFilename: string) => {
+  const buffer = await request.get({uri, encoding: null})
+  fs.writeFileSync(outputFilename, buffer)
+}
