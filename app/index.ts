@@ -31,9 +31,10 @@ app.get('/light', (req: express.Request, res: express.Response) => res.json(getL
 app.post('/light/:deviceId', async (req: express.Request, res: express.Response) => {
   try {
     const scene = req.body
-    if (scene.power) return res.json(await setPower(req.params.deviceId, scene.power))
-    if (scene.rgb) return res.json(await setRGB(req.params.deviceId, scene.rgb))
-    if (scene.bright) return res.json(await setBright(req.params.deviceId, Number(scene.bright)))
+    if (scene.power) await setPower(req.params.deviceId, scene.power)
+    if (scene.rgb) await setRGB(req.params.deviceId, scene.rgb)
+    if (scene.bright) await setBright(req.params.deviceId, Number(scene.bright))
+    return res.json({result: 'ok'})
   } catch (error) {
     console.error(error)
     return res.status(500).json({error: error.message})
