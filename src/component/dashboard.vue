@@ -8,29 +8,24 @@
     </select>
     <!-- Scene list -->
     <div v-if="scenario">
-      <a v-for="s in scenario.scenes" :key="s.id" @click="playScene(s)">
-        {{ s.name }}
-        <span class="actions">
-          <i v-if="s.music" class="material-icons logo">music_note</i>
-          <i
-            v-for="c in s.casts"
-            :key="c.id"
-            class="material-icons"
-            :class="[c.media === null ? 'warning' : 'logo']"
-            >photo</i
-          >
-          <i
-            v-for="l in s.lights"
-            :key="l.id"
-            :style="{color: 'rgb(' + l.rgb[0] + ',' + l.rgb[1] + ',' + l.rgb[2] + ')'}"
-            class="material-icons"
-            >lightbulb_outline</i
-          >
-        </span>
-      </a>
+      <scene-preview
+        :scene="s"
+        v-for="s in scenario.scenes"
+        :key="s.id"
+        :click="() => playScene(s)"
+        class="clickable"
+        :class="{selected: scene && scene.id === s.id}"
+      ></scene-preview>
     </div>
     <!--Player(s) -->
-    <audio-player v-if="music" :music="music" :on-playing="onMusicPlaying"></audio-player>
+    <audio-player v-if="music && scenario" :music="music" :on-playing="onMusicPlaying"></audio-player>
+    <!-- Next Scene -->
+    <scene-preview
+      v-if="nextScene"
+      :scene="nextScene"
+      :click="() => playScene(nextScene)"
+      class="nextScene clickable"
+    ></scene-preview>
   </div>
 </template>
 
@@ -38,19 +33,29 @@
 import {ALL_DASHBOARD} from '../config/graph'
 import HTTP from '../config/http'
 import audioPlayer from './audioPlayer'
+import scenePreview from './scenePreview'
 
 export default {
   name: 'Dashboard',
   components: {
     audioPlayer,
+    scenePreview,
   },
   data() {
     return {
       allScenarios: [],
       scenario: undefined,
       music: undefined,
-      scene: {},
+      scene: undefined,
     }
+  },
+  computed: {
+    nextScene() {
+      if (!this.scenario || !this.scenario.scenes.length) return
+      if (!this.scene) return this.scenario.scenes[0]
+      const sceneIndex = this.scenario.scenes.findIndex(s => s.id === this.scene.id)
+      if (sceneIndex + 1 < this.scenario.scenes.length) return this.scenario.scenes[sceneIndex + 1]
+    },
   },
   methods: {
     playScene(scene) {
@@ -83,29 +88,15 @@ export default {
 @import '../styles/config';
 #dashboard {
   text-align: center;
-  div {
-    a {
-      text-decoration: none;
-      cursor: pointer;
-      border: $border;
-      background-color: $bg2;
-      color: #eee;
-      font-weight: bold;
-      border-radius: 2px;
-      padding: 0.5em;
-      width: 10em;
-      height: 3em;
-      text-align: center;
-      display: inline-grid;
-      margin: 0.5em;
-      .actions {
-        display: inline;
-        font-size: 0.5em;
-      }
-    }
-    a:hover {
-      background-color: #111;
-    }
+  .nextScene {
+    margin: 0 auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    position: fixed;
+  }
+  .selected {
+    background-color: $colorSelected;
   }
 }
 </style>

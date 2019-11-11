@@ -231,6 +231,7 @@ export const ALL_DASHBOARD = gql`
       id
       name
       scenes(orderBy: order_ASC) {
+        id
         name
         music
         order
