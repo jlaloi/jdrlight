@@ -93,23 +93,13 @@ export default {
       }
       this.testLoading = false
     },
-    update(
-      proxy,
-      {
-        data: {updateCast},
-      },
-    ) {
+    update(proxy, {data: {updateCast}}) {
       const data = proxy.readQuery(this.query)
       const castIndex = data.allCasts.findIndex(l => l.id == this.cast.id)
       data.allCasts[castIndex] = updateCast
       proxy.writeQuery({...this.query, data})
     },
-    updateDelete(
-      proxy,
-      {
-        data: {deleteCast},
-      },
-    ) {
+    updateDelete(proxy, {data: {deleteCast}}) {
       const data = proxy.readQuery(this.query)
       proxy.writeQuery({
         ...this.query,
@@ -161,19 +151,19 @@ export default {
   text-align: center;
   margin: 0.25em;
   padding: 0.25em;
-  width: 10em;
+  width: 9.5em;
   input,
-  button,
   select {
-    width: 9em;
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 0;
   }
-  button {
-    width: 4.35em;
-    display: inline-block;
+  input {
+    width: 7em;
+  }
+  select {
+    width: 1.75em;
   }
   .actions {
     display: inline-block;

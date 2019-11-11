@@ -9,7 +9,7 @@
     >
       <template slot-scope="{mutate, loading, error}">
         <!-- Bright -->
-        <input v-model="bright" type="range" min="0" max="100" step="5" :title="bright + ' %'" />
+        <input v-model="bright" type="range" class="bright" min="5" max="100" step="5" :title="bright + ' %'" />
         <!-- Color -->
         <input v-model="color" type="color" />
         <!-- Power -->
@@ -89,23 +89,13 @@ export default {
     async testLight() {
       await HTTP.post(`/light/${this.light.deviceId}`, this.getConfig)
     },
-    update(
-      proxy,
-      {
-        data: {updateLight},
-      },
-    ) {
+    update(proxy, {data: {updateLight}}) {
       const data = proxy.readQuery(this.query)
       const lightIndex = data.allLights.findIndex(l => l.id == this.light.id)
       data.allLights[lightIndex] = updateLight
       proxy.writeQuery({...this.query, data})
     },
-    updateDelete(
-      proxy,
-      {
-        data: {deleteLight},
-      },
-    ) {
+    updateDelete(proxy, {data: {deleteLight}}) {
       const data = proxy.readQuery(this.query)
       proxy.writeQuery({
         ...this.query,
@@ -131,7 +121,7 @@ export default {
         })
     },
     reset() {
-      ({power: this.power, bright: this.bright} = this.light)
+      ;({power: this.power, bright: this.bright} = this.light)
       this.color = this.rgbToHex(this.light.rgb)
     },
     rgbToHex(rgb) {
@@ -148,7 +138,7 @@ export default {
 @import '../styles/config';
 #light {
   p {
-    margin: 0;
+    margin: 0 0 0.5em 0;
     font-weight: bold;
   }
   border: $border;
@@ -157,18 +147,22 @@ export default {
   text-align: center;
   margin: 0.25em;
   padding: 0.25em;
-  width: 10em;
+  width: 9.5em;
   input,
   button,
   select {
-    width: 9em;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 0;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+  input[type='color'] {
+    width: 2em;
+  }
+  input[type='range'] {
+    width: 7em;
   }
   select {
-    width: 3.6em;
+    width: 3.5em;
     display: inline-block;
     font-size: 1em;
   }
