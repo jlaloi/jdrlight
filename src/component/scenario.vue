@@ -20,7 +20,7 @@
       v-if="!$apollo.loading"
       :get-export="getExport"
       :export-name="Scenario.name"
-      :onImport="importScenario"
+      :on-import="importScenario"
     ></import-export>
   </div>
 </template>

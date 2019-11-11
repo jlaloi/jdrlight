@@ -1,5 +1,5 @@
 export const exportJSON = (json: object, fileName: string) => {
-  const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(json, null, 2))
+  const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(json, stringifyReplacer, 1))
   const downloadAnchorNode = document.createElement('a')
   downloadAnchorNode.setAttribute('href', dataStr)
   downloadAnchorNode.setAttribute('download', fileName + '.json')
@@ -10,11 +10,7 @@ export const exportJSON = (json: object, fileName: string) => {
 
 export const clone = (obj: object) => JSON.parse(JSON.stringify(obj))
 
-export const clearObject = (obj: object) => {
-  const newObj = clone(obj)
-  for (const attribute in newObj) {
-    if (typeof obj[attribute] == 'object') newObj[attribute] = clearObject(newObj[attribute])
-    else if (attribute === 'id' || attribute === '__typename') delete newObj[attribute]
-  }
-  return newObj
+export const stringifyReplacer = (key: string, value: object) => {
+  if (key === 'id' || key === '__typename') return undefined
+  return value
 }

@@ -1,5 +1,5 @@
 <template>
-  <div id="hostWarn" v-if="shouldDisplay">
+  <div v-if="shouldDisplay" id="hostWarn">
     <i class="material-icons">warning</i> WARNING : YOU ARE CONNECTED WITH A LOCAL ADDRESS {{ currentIP }}
     <i class="material-icons">warning</i>
   </div>

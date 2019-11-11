@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import {clearObject, exportJSON} from '../config/misc'
+import {exportJSON} from '../config/misc'
 
 export default {
   name: 'ImportJSON',
@@ -14,7 +14,7 @@ export default {
   methods: {
     async doExport() {
       const toExport = await this.getExport()
-      exportJSON(clearObject(toExport), this.exportName)
+      exportJSON(toExport, this.exportName)
     },
     doImport(event) {
       const reader = new FileReader()
@@ -27,6 +27,10 @@ export default {
 <style lang="scss" scoped>
 @import '../styles/config';
 #importJSON {
+  border: $border;
+  border-style: dashed;
+  display: inline-block;
   font-size: 0.8em;
+  padding: 0.2em 1em;
 }
 </style>
