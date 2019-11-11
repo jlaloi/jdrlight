@@ -7,7 +7,7 @@ import gql from 'graphql-tag'
  */
 export const ALL_SCENARIOS = gql`
   query {
-    allScenarios {
+    allScenarios(orderBy: name_ASC) {
       id
       name
     }
@@ -227,7 +227,7 @@ export const DELETE_LIGHT = gql`
  */
 export const ALL_DASHBOARD = gql`
   query {
-    allScenarios {
+    allScenarios(orderBy: name_ASC) {
       id
       name
       scenes(orderBy: order_ASC) {
