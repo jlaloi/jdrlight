@@ -28,6 +28,11 @@
   "author": "julien.laloi@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "@hapi/hapi": "^18.4.0",
+    "@hapi/inert": "^5.2.2",
+    "@hapi/joi": "^16.1.7",
+    "@types/hapi__hapi": "^18.2.6",
+    "@types/hapi__inert": "^5.2.0",
     "apollo-boost": "^0.3.1",
     "body-parser": "^1.19.0",
     "castv2-player": "^2.1.0",
