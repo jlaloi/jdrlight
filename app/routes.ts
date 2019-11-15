@@ -1,6 +1,5 @@
 import * as fsWithCallbacks from 'fs'
 import * as Hapi from '@hapi/hapi'
-import * as Joi from '@hapi/joi'
 const fs = fsWithCallbacks.promises
 
 import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light'
@@ -51,7 +50,7 @@ export const routes = [
     path: '/lookup',
     handler: () => {
       initLookup()
-      return 'ok'
+      return {result: 'ok'}
     },
   },
   {
@@ -62,18 +61,6 @@ export const routes = [
   {
     method: 'POST',
     path: '/light/{deviceId}',
-    options: {
-      validate: {
-        params: Joi.object({
-          deviceId: Joi.string().required(),
-        }),
-        payload: Joi.object({
-          power: Joi.string().required(),
-          rgb: Joi.array().required(),
-          bright: Joi.number().required(),
-        }),
-      },
-    },
     handler: async ({params: {deviceId}, payload: {power, rgb, bright}}: any) => {
       if (power) await setPower(deviceId, power)
       if (rgb) await setRGB(deviceId, rgb)
@@ -89,31 +76,7 @@ export const routes = [
   {
     method: 'POST',
     path: '/cast/{deviceId}',
-    options: {
-      validate: {
-        params: Joi.object({
-          deviceId: Joi.string().required(),
-        }),
-        payload: Joi.object({
-          media: Joi.string().required(),
-        }),
-      },
-    },
     handler: async ({headers, params: {deviceId}, payload: {media}}: any) =>
       await cast(deviceId, media, DIR_PUBLIC + DIR_IMG, (headers.referer || headers.host + '/') + DIR_IMG),
   },
 ]
-
-interface ReqCast extends Hapi.Request {
-  payload: {
-    media: string
-  }
-}
-
-interface ReqLight extends Hapi.Request {
-  payload: {
-    power: string
-    rgb: number[]
-    bright: number
-  }
-}
