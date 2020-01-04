@@ -87,6 +87,7 @@ export default {
       this.youTubePlayer = YouTubePlayer(this.ytPlayerId, {...this.ytConfig})
       this.youTubePlayerEvent = this.youTubePlayer.on('stateChange', event => {
         if (event && event.data === 1) this.playing()
+        else if (event && event.data === 0) this.youTubePlayer.playVideo() // Fix loop...
       })
       this.playVideo()
     },
