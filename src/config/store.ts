@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     musics: [],
     casts: [],
     images: [],
+    effects: [],
   },
   mutations: {
     setLights(state, payload) {
@@ -24,6 +25,9 @@ export const store = new Vuex.Store({
     },
     setImages(state, payload) {
       state.images = payload.images
+    },
+    setEffects(state, payload) {
+      state.effects = payload.effects
     },
   },
   actions: {
@@ -49,6 +53,12 @@ export const store = new Vuex.Store({
       const images = (await HTTP.get('/images')).body
       context.commit('setImages', {
         images,
+      })
+    },
+    async fetchEffects(context) {
+      const effects = (await HTTP.get('/effects')).body
+      context.commit('setEffects', {
+        effects,
       })
     },
   },

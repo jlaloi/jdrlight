@@ -8,6 +8,7 @@ import {getCasts, cast, initLookUpCast} from './cast'
 const DIR_PUBLIC = 'public/'
 const DIR_MUSIC = 'music/'
 const DIR_IMG = 'image/'
+const DIR_EFFECT = 'effect/'
 
 export const initLookup = () => {
   initLookUpLight()
@@ -44,6 +45,11 @@ export const routes = [
     method: 'GET',
     path: '/musics',
     handler: async () => await readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC),
+  },
+  {
+    method: 'GET',
+    path: '/effects',
+    handler: async () => await readDir(DIR_PUBLIC + DIR_EFFECT, DIR_EFFECT),
   },
   {
     method: 'GET',

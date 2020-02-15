@@ -38,6 +38,7 @@ export default {
     this.$store.dispatch('fetchMusics')
     this.$store.dispatch('fetchCasts')
     this.$store.dispatch('fetchImages')
+    this.$store.dispatch('fetchEffects')
   },
 }
 </script>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Scenarios from '../component/scenarios.vue'
 import Scenario from '../component/scenario.vue'
 import Dashboard from '../component/dashboard.vue'
+import TextToSpeech from '../component/textToSpeech'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,7 @@ export const routes = [
     name: 'scenario',
     component: Scenario,
   },
+  {title: 'Say!', path: '/texttospeech', component: TextToSpeech},
 ]
 
 export const router = new VueRouter({

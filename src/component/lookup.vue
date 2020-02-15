@@ -1,11 +1,17 @@
 <template>
   <div id="Lookup">
-    <i class="material-icons clickable" :class="{rotating: loading}" title="Refresh media list" @click="refreshMedia()"
-      >perm_media</i
-    >
-    <i class="material-icons clickable" :class="{rotating: loading}" title="Refresh cast list" @click="refreshCast()"
-      >cast</i
-    >
+    <i
+      class="material-icons clickable"
+      :class="{rotating: loading}"
+      title="Refresh media list"
+      @click="refreshMedia()"
+    >perm_media</i>
+    <i
+      class="material-icons clickable"
+      :class="{rotating: loading}"
+      title="Refresh cast list"
+      @click="refreshCast()"
+    >cast</i>
   </div>
 </template>
 
@@ -30,9 +36,11 @@ export default {
     },
     async refreshMedia() {
       this.loading = true
-      Promise.all([this.$store.dispatch('fetchMusics'), this.$store.dispatch('fetchImages')]).finally(
-        () => (this.loading = false),
-      )
+      Promise.all([
+        this.$store.dispatch('fetchMusics'),
+        this.$store.dispatch('fetchImages'),
+        this.$store.dispatch('fetchEffects'),
+      ]).finally(() => (this.loading = false))
     },
   },
 }

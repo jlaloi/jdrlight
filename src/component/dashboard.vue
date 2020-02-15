@@ -9,23 +9,29 @@
     <!-- Scene list -->
     <div v-if="scenario">
       <scene-preview
-        :scene="s"
         v-for="s in scenario.scenes"
         :key="s.id"
+        :scene="s"
         :click="() => playScene(s)"
         class="clickable"
         :class="{selected: scene && scene.id === s.id}"
       ></scene-preview>
     </div>
     <!--Player(s) -->
-    <audio-player v-if="music && scenario" :music="music" :on-playing="onMusicPlaying"></audio-player>
-    <!-- Next Scene -->
+    <audio-player
+      v-if="music && scenario"
+      :music="music"
+      :on-playing="onMusicPlaying"
+      volume-control="yes"
+    ></audio-player>
+    <effects v-if="scenario"></effects>
+    <!-- Next Scene
     <scene-preview
       v-if="nextScene"
       :scene="nextScene"
       :click="() => playScene(nextScene)"
       class="nextScene clickable"
-    ></scene-preview>
+    ></scene-preview>-->
   </div>
 </template>
 
@@ -34,12 +40,14 @@ import {ALL_DASHBOARD} from '../config/graph'
 import HTTP from '../config/http'
 import audioPlayer from './audioPlayer'
 import scenePreview from './scenePreview'
+import effects from './effects'
 
 export default {
   name: 'Dashboard',
   components: {
     audioPlayer,
     scenePreview,
+    effects,
   },
   data() {
     return {
@@ -55,6 +63,7 @@ export default {
       if (!this.scene) return this.scenario.scenes[0]
       const sceneIndex = this.scenario.scenes.findIndex(s => s.id === this.scene.id)
       if (sceneIndex + 1 < this.scenario.scenes.length) return this.scenario.scenes[sceneIndex + 1]
+      return null
     },
   },
   methods: {

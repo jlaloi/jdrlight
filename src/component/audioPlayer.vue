@@ -4,6 +4,16 @@
     <div v-else>
       <div :id="ytPlayerId"></div>
     </div>
+    <input
+      v-if="volumeControl && music"
+      v-model="volume"
+      type="range"
+      min="0"
+      max="100"
+      step="10"
+      :orient="volumeOrient"
+      :title="`Volume : ${volume}`"
+    />
   </div>
 </template>
 
@@ -12,11 +22,12 @@ import YouTubePlayer from 'youtube-player'
 
 export default {
   name: 'AudioPlayer',
-  props: ['music', 'config', 'onPlaying'],
+  props: ['music', 'config', 'onPlaying', 'onEnded', 'noRepeat', 'volumeControl'],
   data() {
     return {
       audioPlayer: undefined,
       youTubePlayer: undefined,
+      volume: 100,
     }
   },
   computed: {
@@ -28,10 +39,9 @@ export default {
     },
     ytConfig() {
       return {
-        height: '192',
-        width: '312',
+        height: `${192}`,
+        width: `${312}`,
         autoplay: 0,
-        loop: 1,
       }
     },
     isAudioFile() {
@@ -49,6 +59,10 @@ export default {
         if (!oldMusic || this.isAudioFile !== this.isFile(oldMusic)) this.initPlayer()
         else this.playMusic()
       })
+    },
+    volume(newVolume) {
+      if (this.youTubePlayer) this.youTubePlayer.setVolume(newVolume)
+      else if (this.audioPlayer) this.audioPlayer.volume = newVolume / 100
     },
   },
   mounted() {
@@ -76,18 +90,23 @@ export default {
     initAudioFile() {
       this.audioPlayer = document.getElementById(this.audioPlayerId)
       this.audioPlayer.onplaying = this.playing
+      this.audioPlayer.onended = this.onEnded
       this.playAudioFile()
     },
     playAudioFile() {
       this.audioPlayer.src = this.music
       this.audioPlayer.load()
+      if (this.noRepeat) this.audioPlayer.loop = false
       if (!this.config) this.audioPlayer.play()
     },
     initVideo() {
       this.youTubePlayer = YouTubePlayer(this.ytPlayerId, {...this.ytConfig})
       this.youTubePlayerEvent = this.youTubePlayer.on('stateChange', event => {
         if (event && event.data === 1) this.playing()
-        else if (event && event.data === 0) this.youTubePlayer.playVideo() // Fix loop...
+        else if (event && event.data === 0) {
+          if (!this.noRepeat) this.youTubePlayer.playVideo() // Fix loop...
+          if (this.onEnded) this.onEnded()
+        }
       })
       this.playVideo()
     },
@@ -108,5 +127,8 @@ export default {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
+  input[type='range'] {
+    width: 90%;
+  }
 }
 </style>
