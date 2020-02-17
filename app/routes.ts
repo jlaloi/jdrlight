@@ -1,11 +1,13 @@
 import * as fsWithCallbacks from 'fs'
-import * as Hapi from '@hapi/hapi'
+import {IncomingMessage, ServerResponse} from 'http'
+import {FastifyRequest, FastifyReply, HTTPMethod} from 'fastify'
+
 const fs = fsWithCallbacks.promises
 
 import {getLights, setBright, setPower, setRGB, initLookUpLight} from './light'
 import {getCasts, cast, initLookUpCast} from './cast'
 
-const DIR_PUBLIC = 'public/'
+export const DIR_PUBLIC = 'public/'
 const DIR_MUSIC = 'music/'
 const DIR_IMG = 'image/'
 const DIR_EFFECT = 'effect/'
@@ -27,62 +29,62 @@ const readDir = async (path: string, prefix: string) => {
 
 export const routes = [
   {
-    method: 'GET',
-    path: '/{param*}',
-    handler: {
-      directory: {
-        path: DIR_PUBLIC,
-        index: ['index.html'],
-      },
-    },
+    method: 'GET' as HTTPMethod,
+    url: '/images',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) =>
+      readDir(DIR_PUBLIC + DIR_IMG, DIR_IMG),
   },
   {
-    method: 'GET',
-    path: '/images',
-    handler: async () => await readDir(DIR_PUBLIC + DIR_IMG, DIR_IMG),
+    method: 'GET' as HTTPMethod,
+    url: '/musics',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) =>
+      readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC),
   },
   {
-    method: 'GET',
-    path: '/musics',
-    handler: async () => await readDir(DIR_PUBLIC + DIR_MUSIC, DIR_MUSIC),
+    method: 'GET' as HTTPMethod,
+    url: '/effects',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) =>
+      readDir(DIR_PUBLIC + DIR_EFFECT, DIR_EFFECT),
   },
   {
-    method: 'GET',
-    path: '/effects',
-    handler: async () => await readDir(DIR_PUBLIC + DIR_EFFECT, DIR_EFFECT),
-  },
-  {
-    method: 'GET',
-    path: '/lookup',
-    handler: () => {
+    method: 'GET' as HTTPMethod,
+    url: '/lookup',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
       initLookup()
-      return {result: 'ok'}
+      reply.send({result: 'ok'})
     },
   },
   {
-    method: 'GET',
-    path: '/light',
-    handler: getLights,
+    method: 'GET' as HTTPMethod,
+    url: '/light',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => getLights(),
   },
   {
-    method: 'POST',
-    path: '/light/{deviceId}',
-    handler: async ({params: {deviceId}, payload: {power, rgb, bright}}: any) => {
+    method: 'POST' as HTTPMethod,
+    url: '/light/:deviceId',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
+      const {deviceId} = request.params
+      const {power, rgb, bright} = request.body
       if (power) await setPower(deviceId, power)
       if (rgb) await setRGB(deviceId, rgb)
       if (bright) await setBright(deviceId, Number(bright))
-      return {result: 'ok'}
+      reply.send({result: 'ok'})
     },
   },
   {
-    method: 'GET',
-    path: '/cast',
-    handler: getCasts,
+    method: 'GET' as HTTPMethod,
+    url: '/cast',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => getCasts(),
   },
   {
-    method: 'POST',
-    path: '/cast/{deviceId}',
-    handler: async ({headers, params: {deviceId}, payload: {media}}: any) =>
-      await cast(deviceId, media, DIR_PUBLIC + DIR_IMG, (headers.referer || headers.host + '/') + DIR_IMG),
+    method: 'POST' as HTTPMethod,
+    url: '/cast/:deviceId',
+    handler: async (request: FastifyRequest<IncomingMessage>, reply: FastifyReply<ServerResponse>) => {
+      const {deviceId} = request.params
+      const {media} = request.body
+      const {referer, host} = request.headers
+      const result = await cast(deviceId, media, DIR_PUBLIC + DIR_IMG, (referer || host + '/') + DIR_IMG)
+      reply.send(result)
+    },
   },
 ]

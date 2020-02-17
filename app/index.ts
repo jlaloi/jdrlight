@@ -1,18 +1,23 @@
-import * as Hapi from '@hapi/hapi'
-import * as Inert from '@hapi/inert'
+import * as fastify from 'fastify'
+import * as fStatic from 'fastify-static'
+import * as path from 'path'
+import {initLookup, routes, DIR_PUBLIC} from './routes'
 
-import {initLookup, routes} from './routes'
-
+const server = fastify({logger: true})
+const HOST = '0.0.0.0'
 const PORT = 9090
 
 const init = async () => {
-  const server = new Hapi.Server({
-    port: PORT,
+  server.register(fStatic, {
+    root: path.join(__dirname, '../', DIR_PUBLIC),
   })
-  await server.register(Inert)
-  server.route(routes)
-  await server.start()
-  console.log(`Server running on port ${PORT}`)
+  routes.forEach(route => server.route(route))
+  server.listen(PORT, HOST, err => {
+    if (err) {
+      server.log.error(err)
+      process.exit(1)
+    }
+  })
 }
 
 init()
