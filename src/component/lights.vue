@@ -3,9 +3,17 @@
     <!-- Add Light -->
     <div v-if="loading">Loading</div>
     <div v-else class="list">
-      <select v-model="selectedLight" :disabled="loading || lightsSorted.length === 0" @change="onChange">
+      <select
+        v-model="selectedLight"
+        :disabled="loading || lightsSorted.length === 0"
+        @change="onChange"
+      >
         <option />
-        <option v-for="(l, index) in lightsSorted" :key="index" :value="l">{{ l.name || l.deviceId }}</option>
+        <option
+          v-for="(l, index) in lightsSorted"
+          :key="index"
+          :value="l"
+        >{{ l.name || l.deviceId }}</option>
       </select>
       <i class="material-icons logo" title="Light">lightbulb_outline</i>
     </div>
@@ -41,7 +49,7 @@ export default {
   },
   methods: {
     async create() {
-      await createLight.bind(this)(this.sceneId, this.selectedLight.deviceId, 'ON', 100, [255, 255, 255])
+      await createLight.bind(this)(this.sceneId, this.selectedLight.deviceId, 'ON', 100, '#fffff')
       this.selectedLight = {}
     },
     onChange() {

@@ -4,12 +4,20 @@
     <!-- Fields -->
     <ApolloMutation
       :mutation="updateLight"
-      :variables="{id: light.id, power, bright: Number(bright), rgb}"
+      :variables="{id: light.id, power, bright: Number(bright), color}"
       :update="update"
     >
       <template slot-scope="{mutate, loading, error}">
         <!-- Bright -->
-        <input v-model="bright" type="range" class="bright" min="5" max="100" step="5" :title="bright + ' %'" />
+        <input
+          v-model="bright"
+          type="range"
+          class="bright"
+          min="5"
+          max="100"
+          step="5"
+          :title="bright + ' %'"
+        />
         <!-- Color -->
         <input v-model="color" type="color" />
         <!-- Power -->
@@ -22,9 +30,11 @@
           <i class="material-icons clickable" @click="testLight()">play_circle_outline</i>
           <div v-if="loading || deleteLoading">Loading</div>
           <i v-else class="material-icons clickable" :class="{unsaved}" @click="mutate()">save</i>
-          <i v-if="!deleteLoading" class="material-icons clickable" @click="confirm(`Delete ${name}?`) && delLight()"
-            >delete</i
-          >
+          <i
+            v-if="!deleteLoading"
+            class="material-icons clickable"
+            @click="confirm(`Delete ${name}?`) && delLight()"
+          >delete</i>
         </div>
         <p v-if="error || deleteError">An error occured: {{ error || deleteError }}</p>
       </template>
@@ -71,15 +81,11 @@ export default {
       return {
         power: this.power,
         bright: this.bright,
-        rgb: this.rgb,
+        color: this.color,
       }
     },
     unsaved() {
-      return (
-        this.power !== this.light.power ||
-        this.bright != this.light.bright ||
-        this.color !== this.rgbToHex(this.light.rgb)
-      )
+      return this.power !== this.light.power || this.bright != this.light.bright || this.color !== this.light.color
     },
   },
   mounted() {
@@ -87,7 +93,7 @@ export default {
   },
   methods: {
     async testLight() {
-      await HTTP.post(`/light/${this.light.deviceId}`, this.getConfig)
+      await HTTP.post(`/light/${this.light.deviceId}`, {rgb: this.rgb, ...this.getConfig})
     },
     update(proxy, {data: {updateLight}}) {
       const data = proxy.readQuery(this.query)
@@ -121,8 +127,7 @@ export default {
         })
     },
     reset() {
-      ;({power: this.power, bright: this.bright} = this.light)
-      this.color = this.rgbToHex(this.light.rgb)
+      ;({power: this.power, bright: this.bright, color: this.color} = this.light)
     },
     rgbToHex(rgb) {
       return '#' + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)

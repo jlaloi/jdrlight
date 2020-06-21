@@ -3,16 +3,18 @@
     {{ scene.name }}
     <span class="actions">
       <i v-if="scene.music" class="material-icons logo">music_note</i>
-      <i v-for="c in scene.casts" :key="c.id" class="material-icons" :class="[c.media === null ? 'warning' : 'logo']"
-        >photo</i
-      >
+      <i
+        v-for="c in scene.casts"
+        :key="c.id"
+        class="material-icons"
+        :class="[c.media === null ? 'warning' : 'logo']"
+      >photo</i>
       <i
         v-for="l in scene.lights"
         :key="l.id"
-        :style="{color: 'rgb(' + l.rgb[0] + ',' + l.rgb[1] + ',' + l.rgb[2] + ')'}"
+        :style="{color: l.color}"
         class="material-icons"
-        >lightbulb_outline</i
-      >
+      >lightbulb_outline</i>
     </span>
   </div>
 </template>

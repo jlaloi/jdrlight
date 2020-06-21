@@ -95,7 +95,7 @@ export async function createCast(sceneId: string, deviceId: string, media: strin
   }
 }
 
-export async function createLight(sceneId: string, deviceId: string, power: string, bright: number, rgb: number[]) {
+export async function createLight(sceneId: string, deviceId: string, power: string, bright: number, color: string) {
   this.loading = true
   this.error = undefined
   try {
@@ -103,7 +103,7 @@ export async function createLight(sceneId: string, deviceId: string, power: stri
       data: {createLight},
     } = await this.$apollo.mutate({
       mutation: CREATE_LIGHT,
-      variables: {sceneId, deviceId, power, bright, rgb},
+      variables: {sceneId, deviceId, power, bright, color},
       update(proxy, {data: {createLight}}) {
         const query = {
           query: GET_LIGHTS,
@@ -135,7 +135,7 @@ export async function duplicateScene(scene) {
     },
   })
   for await (const light of allLights)
-    createLight.bind(this)(sceneId, light.deviceId, light.power, light.bright, light.rgb)
+    createLight.bind(this)(sceneId, light.deviceId, light.power, light.bright, light.color)
   // Casts
   const {
     data: {allCasts},
@@ -151,6 +151,6 @@ export async function duplicateScene(scene) {
 export async function importScene(scene, scenarioId) {
   const {id: sceneId} = await createScene.bind(this)(scenarioId, scene.order, scene.name, scene.music)
   for await (const light of scene.lights)
-    createLight.bind(this)(sceneId, light.deviceId, light.power, light.bright, light.rgb)
+    createLight.bind(this)(sceneId, light.deviceId, light.power, light.bright, light.color)
   for await (const cast of scene.casts) createCast.bind(this)(sceneId, cast.deviceId, cast.media)
 }

@@ -74,8 +74,12 @@ export default {
       this.updateCast()
     },
     async updateLight() {
-      for (let i = 0; i < this.scene.lights.length; i++)
-        await HTTP.post(`/light/${this.scene.lights[i].deviceId}`, this.scene.lights[i])
+      for (let i = 0; i < this.scene.lights.length; i++) {
+        await HTTP.post(`/light/${this.scene.lights[i].deviceId}`, {
+          rgb: this.scene.lights[i].color.match(/[A-Za-z0-9]{2}/g).map(v => parseInt(v, 16)),
+          ...this.scene.lights[i],
+        })
+      }
     },
     updateCast() {
       this.scene.casts.forEach(cast => HTTP.post(`/cast/${cast.deviceId}`, {media: cast.media}))
