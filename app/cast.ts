@@ -34,8 +34,8 @@ const networkInterfaces = os.networkInterfaces()
 const ips = Object.keys(networkInterfaces)
   .map(key => networkInterfaces[key])
   .flat()
-  .map(i => i.address)
-  .filter(i => !i.includes('::'))
+  .map(i => i?.address)
+  .filter(i => i && !i.includes('::'))
 const isLocalUrl = (url: string) => ips.find(ip => url.match(new RegExp(`^http?://${ip}?:([0-9]*)/(.*)`)))
 
 /*
